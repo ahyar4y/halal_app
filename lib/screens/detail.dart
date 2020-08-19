@@ -7,7 +7,7 @@ import 'package:halal_app/models/imageData.dart';
 class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var imageData = Provider.of<ImageData>(context);
+    // var imageData = Provider.of<ImageData>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -15,22 +15,35 @@ class Detail extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Container(
-          child: Column(
-            children: <Widget>[
-              Image.file(File(imageData.image)),
-              FlatButton(
-                // onPressed: () {
-                //   VisionAPI vision = VisionAPI();
-
-                //   vision.ocr(imageData.image);
-                // },
-                onPressed: imageData.setIngredients,
-                child: Text('read image'),
+      body: Column(
+        children: <Widget>[
+          //Image.file(File(imageData.image)),
+          Container(
+            height: 300,
+            decoration: BoxDecoration(
+              color: Colors.green,
+            ),
+          ),
+          Row(
+            children: [
+              Container(
+                height: 300,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Colors.yellow,
+                ),
+              ),
+              Container(
+                height: 300,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
               ),
             ],
           ),
-        ),
+        ],
+      ),
     );
   }
 }
