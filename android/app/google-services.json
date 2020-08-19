@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "915406807781",
+    "firebase_url": "https://halalapp-63c63.firebaseio.com",
+    "project_id": "halalapp-63c63",
+    "storage_bucket": "halalapp-63c63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915406807781:android:5734307b9c2e0f3ae22a0c",
+        "android_client_info": {
+          "package_name": "com.example.halal_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915406807781-o9c3114hoe8arvatml24a3d9mpns8pcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeVed9MVxELkjy6AEZPRKsAtv4cSx-EPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915406807781-o9c3114hoe8arvatml24a3d9mpns8pcs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

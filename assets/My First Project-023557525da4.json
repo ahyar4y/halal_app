@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "iron-rex-270108",
+  "private_key_id": "023557525da443d339698bb059046d9ec7448d5b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDA1NOhC8KB2BhO\njwejbwnHIZjQ7NXwcl3ElowkdBX3Xv1ApeVqF/8a+TmyM4bCvQXIHgNcFzLIF8aA\ndVC1QlOnrZXEZXNbgDaA88XTdUJcD6Xl223vgkpslUT+kx+ADLTWUJjC0Q9Lfdfe\n1VEZiJhyKSpZqmX1tAMHCSJ25UKbcpv4x7FP6rxFH2cFS+iuzzpkf4bTMRwDfdBk\nkG/NGY6IW8MmVB8D26kPKeZzXdqQNJkBkwn6hS7QMGog3gGQeyANI0JG3Xao458h\neANDs7tr2ayN0I4hsFdQ6JoL05qjB1xzfw3f/iUgvWWpzgbs0h1qnprc357HSJeu\n+xM/rB8jAgMBAAECggEAKW2QCgl8wGis0DPqcDJq511Qd5JqZD4t5w5xDWPjVEIU\nJs99ek2tgR4KRz7KtQvnMhdAoYhaYKK7At4xeL/HOT8R7h/dqMri6tF0rvmCSEUU\nX03FUK+tTabEK+1v1xLjxyeJqlE/9/gRaM5rnhC6r8woTRtOzHrgK6LKxMB8juiw\n5yNiO6MlwIJQge95f9bJ53JCHKdP1yXKQLrEdcP3sghm+8ewgdHrRskCm69Kc3bq\nuQSra33HaFJg4FIyGs7l3abTcfUVswjX+4VU5awGl7ZZO6w27Ho0T3ZwrmZZn+5u\nSJ/5dkBqspjJ5yyTgEvGJyZMBeSRrdtJM1RLpA8oAQKBgQDuHDefR5fW3uP9F9l7\nATIcItftPw5ES6z652zphb73aoo77gGDR36GSv8iw1Sy+LCe0uTVKm+mk2Tg6th2\npvq/HldKrRMv2PHa3DiRPnx/QVkgCj7MxNpVxJ9VAWbMTYj8Tc67WMUKg4K/gf8Z\n0NtrgdJeTYpnl1LMgCmb+QZihQKBgQDPUbigmIRTS+dSk9jpU7e0ZcwUpyot2unT\nn/TifLpYdkDITr8vWD85lv+KAJVC4yCE8nkuHnZaKbVCeJV/nwKxk81m2/ZbBz5d\nyoh0urnrzqFniB/2cONfoHRSVaSDvzz0F3dEKRRuodH8Q+iffk3ZtfQIjnMKolez\npPkMXETvhwKBgQCXp3cxxnqKC0pwb5k/w8Izs2mNnKSskPpqj62JinrXwI6snult\nwMJwLCIV9QzkNIrhjXbb4fxcvvH4YvtdjvqTcXKtiFB5IBbii3Kn54GJ14g5ZO0c\npKBfEi1dCdh8dUGzWKc8IczV5m8HJHfi7GhkL7pZ/88QLYw53cMiqVgMtQKBgQCj\nwmJ7AF4tyZwMP1qsW4OVTH+apLyNggkHL6doq6sqKyZa0tDzndo7LEnngTRlpDDQ\nsxMDWe6Uo7NYsRUtvLWM/TnXENKU7rDVtyB4S/KGEC6wL/dHW75Oj9iyHJIZuxpz\nmIGN5oEMLmhGwoFiUos9+BquE49NjBSIgzxyBgQxywKBgAXBYWHK9vY7RoFQBbEu\n9YqEr7xMmWwTKnM7/Q7Up7kxeS1PRFh443goBF7856dcKxVyN0+9Y3DxCH/eBHfF\nvNbFxyWgfqihmS7v94iAnroGhKR4XauGPsEl1SUZQgwRHRZHfOXwCLigvB3NoEVo\nxxuaNHsSD25WdtKW7iaB4kzS\n-----END PRIVATE KEY-----\n",
+  "client_email": "halalapp@iron-rex-270108.iam.gserviceaccount.com",
+  "client_id": "115289733722093062778",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/halalapp%40iron-rex-270108.iam.gserviceaccount.com"
+}
