@@ -17,9 +17,10 @@ class Detail extends StatelessWidget {
       body: Column(
         children: <Widget>[
           Image.file(File(imageData.image)),
-          FlatButton(
+          RaisedButton(
             onPressed: imageData.readImage,
             child: Text('read'),
+            elevation: 0,
           ),           
         ],
       ),
