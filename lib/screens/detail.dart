@@ -2,12 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/models/imageData.dart';
-// import 'package:halal_app/googleapis.dart';
 
 class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // var imageData = Provider.of<ImageData>(context);
+    var imageData = Provider.of<ImageData>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -17,31 +16,11 @@ class Detail extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          //Image.file(File(imageData.image)),
-          Container(
-            height: 300,
-            decoration: BoxDecoration(
-              color: Colors.green,
-            ),
-          ),
-          Row(
-            children: [
-              Container(
-                height: 300,
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Colors.yellow,
-                ),
-              ),
-              Container(
-                height: 300,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-              ),
-            ],
-          ),
+          Image.file(File(imageData.image)),
+          FlatButton(
+            onPressed: imageData.readImage,
+            child: Text('read'),
+          ),           
         ],
       ),
     );
