@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:halal_app/models/imageData.dart';
-// import 'package:halal_app/googleapis.dart';
+// import 'package:provider/provider.dart';
+// import 'package:halal_app/models/imageData.dart';
 
 class Detail extends StatelessWidget {
   @override
