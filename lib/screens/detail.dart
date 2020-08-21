@@ -7,6 +7,7 @@ class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var imageData = Provider.of<ImageData>(context);
+    imageData.setIngredients();
 
     return Scaffold(
       appBar: AppBar(
@@ -23,25 +24,57 @@ class Detail extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.green,
               ),
-              child: Image.file(File(imageData.image)),
+              child: Center(
+                child: Text('img here'),
+              ),
+              // child: Image.file(File(imageData.image)),
             ),
-            Row(
-              children: [
-                Container(
-                  height: 300,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                  ),
+            Container(
+              padding: EdgeInsets.only(top: 10, bottom: 10),
+              child: Text(
+                'Status',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 26,
                 ),
-                Container(
-                  height: 300,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: Column(
+                children: imageData.ingredients.map((ingredient) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          child: Text(
+                            ingredient,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          child: Text(
+                            imageData.status[imageData.ingredients.indexOf(ingredient)],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),

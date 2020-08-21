@@ -2,6 +2,7 @@ class ImageData {
   String temp = '';
   String image;
   List<String> ingredients = [];
+  List<String> status = [];
 
   void setIngredients() {
     ingredients.add('Milk Chocolate (Sugar, Cocoa Butter, Chocolate, Lactose, Skim Milk, Milkfat, Soy Lecithin, Artificial Flavor)');
@@ -16,6 +17,10 @@ class ImageData {
     ingredients.add('Salt');
     ingredients.add('Egg Whites');
     ingredients.add('Artificial Flavor');
+
+    for (int i = 0; i < ingredients.length; i++) {
+      status.add('unknown');
+    }
   }
 
   void printIngredients() {
