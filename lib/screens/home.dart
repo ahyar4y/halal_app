@@ -53,6 +53,7 @@ class MainTopSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var imageData = Provider.of<ImageData>(context);
+
     return Container(
       height: size.height * 0.40,
       child: Stack(
@@ -97,8 +98,8 @@ class MainTopSection extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: TextField(
-                      onSubmitted: (String value) {
+                    child: TextFormField(
+                      onFieldSubmitted: (String value) {
                         print('$value');
                       },
                       decoration: InputDecoration(

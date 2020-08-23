@@ -19,7 +19,7 @@ class HalalApp extends StatelessWidget {
           primaryColor: Color(0xFF02c39a),
         ),
         debugShowCheckedModeBanner: false,
-        initialRoute: '/detail',
+        initialRoute: '/',
         routes: {
           '/' : (context) => Home(),
           '/detail' : (context) => Detail(),

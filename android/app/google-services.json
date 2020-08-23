@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "915406807781",
-    "firebase_url": "https://halalapp-63c63.firebaseio.com",
-    "project_id": "halalapp-63c63",
-    "storage_bucket": "halalapp-63c63.appspot.com"
+    "project_number": "1055502938674",
+    "firebase_url": "https://halal-app-bf3de.firebaseio.com",
+    "project_id": "halal-app-bf3de",
+    "storage_bucket": "halal-app-bf3de.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:915406807781:android:5734307b9c2e0f3ae22a0c",
+        "mobilesdk_app_id": "1:1055502938674:android:b2c1d395308b66f60cc22b",
         "android_client_info": {
-          "package_name": "com.example.halal_app"
+          "package_name": "com.ahyar4y.halal_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "915406807781-o9c3114hoe8arvatml24a3d9mpns8pcs.apps.googleusercontent.com",
+          "client_id": "1055502938674-bgvih3m22eobq1vs8njcklt6ot8baghj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCeVed9MVxELkjy6AEZPRKsAtv4cSx-EPQ"
+          "current_key": "AIzaSyDAaNKNWIh8S107DMCHw8QioL853KF3iMI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "915406807781-o9c3114hoe8arvatml24a3d9mpns8pcs.apps.googleusercontent.com",
+              "client_id": "1055502938674-bgvih3m22eobq1vs8njcklt6ot8baghj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
