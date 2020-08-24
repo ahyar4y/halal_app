@@ -11,7 +11,7 @@ void main() {
 class HalalApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider(
+    return Provider<ImageData>(
       create: (context) => ImageData(),
       child: MaterialApp(
         theme: ThemeData(

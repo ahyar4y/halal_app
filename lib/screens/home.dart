@@ -52,7 +52,7 @@ class MainTopSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var imageData = Provider.of<ImageData>(context);
+    final imageData = Provider.of<ImageData>(context);
 
     return Container(
       height: size.height * 0.40,
@@ -141,7 +141,7 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.red[400],
                   callback: () async {
-                    imageData.image = await _getImage('camera');
+                    imageData.setImage(await _getImage('camera'));
 
                     Navigator.pushNamed(context, '/detail');
                   },
@@ -153,8 +153,8 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.red[400],
                   callback: () async {
-                    imageData.image = await _getImage('gallery');
-                    print(imageData.image);
+                    imageData.setImage(await _getImage('gallery'));
+
                     Navigator.pushNamed(context, '/detail');
                   },
                 ),

@@ -7,8 +7,7 @@ import 'package:halal_app/services/database.dart';
 class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var imageData = Provider.of<ImageData>(context);
-    imageData.setIngredients();
+    final imageData = Provider.of<ImageData>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -25,13 +24,13 @@ class Detail extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.green,
               ),
-              child: Center(
-                child: Text('img here'),
-              ),
-              // child: Image.file(File(imageData.image)),
+              // child: Center(
+              //   child: Text('img here'),
+              // ),
+              child: Image.file(File(imageData.image)),
             ),
             Container(
-              padding: EdgeInsets.only(top: 10, bottom: 10),
+              padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
                 'Status',
                 textAlign: TextAlign.center,
@@ -49,7 +48,7 @@ class Detail extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Container(
-                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          padding: EdgeInsets.symmetric(vertical: 5.0),
                           child: Text(
                             ingredient,
                             textAlign: TextAlign.left,
@@ -62,7 +61,7 @@ class Detail extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: Container(
-                          padding: EdgeInsets.only(top: 5, bottom: 5),
+                          padding: EdgeInsets.symmetric(vertical: 5.0),
                           child: Text(
                             imageData.status[imageData.ingredients.indexOf(ingredient)],
                             textAlign: TextAlign.center,
