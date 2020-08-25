@@ -139,7 +139,7 @@ class MainTopSection extends StatelessWidget {
                   text: 'Camera',
                   icon: Icons.add_a_photo,
                   iconColor: Colors.white,
-                  fillColor: Colors.red[400],
+                  fillColor: Colors.pink,
                   callback: () async {
                     imageData.setImage(await _getImage('camera'));
 
@@ -151,7 +151,7 @@ class MainTopSection extends StatelessWidget {
                   text: 'Gallery',
                   icon: Icons.add_photo_alternate,
                   iconColor: Colors.white,
-                  fillColor: Colors.red[400],
+                  fillColor: Colors.pink,//Colors.red[400],
                   callback: () async {
                     imageData.setImage(await _getImage('gallery'));
 

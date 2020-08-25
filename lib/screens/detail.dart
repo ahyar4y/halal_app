@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -8,6 +9,15 @@ class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageData = Provider.of<ImageData>(context);
+    final database = Provider.of<QuerySnapshot>(context);
+
+    void getDB() {
+      for (var doc in database.docs) {
+        print(doc.data());
+      }
+    }
+
+    getDB();
 
     return Scaffold(
       appBar: AppBar(
