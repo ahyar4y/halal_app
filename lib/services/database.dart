@@ -4,8 +4,14 @@ class DatabaseService {
 
   final CollectionReference ingredientCollection = FirebaseFirestore.instance.collection('ingredients');
 
-  DatabaseService() {
-    
+  Future<String> find(String data) async {
+    String result;
+    QuerySnapshot qs = await ingredientCollection.where("name", isEqualTo: data).get();
+    qs.docs.forEach((doc) {
+      result = doc.data()['status'];
+    });
+
+    return result;
   }
 
   Stream<QuerySnapshot> get ingredients {

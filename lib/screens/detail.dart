@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:halal_app/functions/horspool.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:halal_app/models/imageData.dart';
@@ -9,15 +10,24 @@ class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageData = Provider.of<ImageData>(context);
-    final database = Provider.of<QuerySnapshot>(context);
+    final database = Provider.of<DatabaseService>(context);
 
-    void getDB() {
-      for (var doc in database.docs) {
-        print(doc.data());
+    matchDB() async {
+      List<String> stat = [];
+      int i = 0;
+      for (var ingredient in imageData.ingredients) {
+        stat.add(await database.find(ingredient) ?? 'unknown');
       }
+
+      stat.forEach((element) {
+        print('${imageData.ingredients[i++]} $element');
+      });
     }
 
-    getDB();
+    Horspool horspool = new Horspool('Partially Hidrogenated Soybean Oil', 'Soybean Oil');
+    horspool.search();
+
+    matchDB();
 
     return Scaffold(
       appBar: AppBar(
