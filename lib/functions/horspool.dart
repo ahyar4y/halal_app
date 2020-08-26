@@ -22,14 +22,12 @@ class Horspool {
   bool search() {
     int i = 0, j;
 
-    while (i <= _n-_m) {
+    while (i <= _n - _m) {
       j = _m - 1;
 
       while (j >= 0 && _pattern[j] == _text[i + j]) j--;
 
-      if (j < 0) {
-        return true;
-      }
+      if (j < 0) return true;
 
       i += _m - 1;
       i -= _occ[_text.codeUnitAt(i)];

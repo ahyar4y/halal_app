@@ -4,30 +4,32 @@ import 'package:halal_app/functions/horspool.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:halal_app/models/imageData.dart';
-import 'package:halal_app/services/database.dart';
+import 'package:halal_app/services/dbservice.dart';
 
 class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageData = Provider.of<ImageData>(context);
-    final database = Provider.of<DatabaseService>(context);
+    final database = Provider.of<List<DBIngredient>>(context) ?? [];
 
     matchDB() async {
       List<String> stat = [];
       int i = 0;
-      for (var ingredient in imageData.ingredients) {
-        stat.add(await database.find(ingredient) ?? 'unknown');
-      }
+      imageData.ingredients.forEach((ingredient) {
+        database.forEach((db) {
+          Horspool horspool = new Horspool(ingredient, db.name);
+          if (horspool.search()) stat.add(db.status);
+          else stat.add('unknown');
+          print('foo');
+        });
+      });
 
       stat.forEach((element) {
         print('${imageData.ingredients[i++]} $element');
       });
     }
 
-    Horspool horspool = new Horspool('Partially Hidrogenated Soybean Oil', 'Soybean Oil');
-    horspool.search();
-
-    matchDB();
+    //matchDB();
 
     return Scaffold(
       appBar: AppBar(

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:halal_app/services/database.dart';
+import 'package:halal_app/services/dbservice.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/models/imageData.dart';
 import 'package:halal_app/screens/home.dart';
@@ -19,7 +19,7 @@ class HalalApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<ImageData>(create: (_) => ImageData()),
-        Provider<DatabaseService>(create: (_) => DatabaseService()),
+        StreamProvider<List<DBIngredient>>.value(value: DatabaseService().ingredients),
       ],
       child: MaterialApp(
         theme: ThemeData(
