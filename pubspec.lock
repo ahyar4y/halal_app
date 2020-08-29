@@ -322,6 +322,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  stringmatcher:
+    dependency: "direct main"
+    description:
+      name: stringmatcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   term_glyph:
     dependency: transitive
     description:
@@ -336,6 +343,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.17"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   typed_data:
     dependency: transitive
     description:

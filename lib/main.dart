@@ -20,6 +20,7 @@ class HalalApp extends StatelessWidget {
       providers: [
         Provider<ImageData>(create: (_) => ImageData()),
         StreamProvider<List<DBIngredient>>.value(value: DatabaseService().ingredients),
+        Provider<DatabaseService>(create: (_) => DatabaseService()),
       ],
       child: MaterialApp(
         theme: ThemeData(

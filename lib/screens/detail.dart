@@ -5,31 +5,50 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'package:halal_app/models/imageData.dart';
 import 'package:halal_app/services/dbservice.dart';
+import 'package:stringmatcher/stringmatcher.dart';
 
 class Detail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageData = Provider.of<ImageData>(context);
-    final database = Provider.of<List<DBIngredient>>(context) ?? [];
+    final dbList = Provider.of<List<DBIngredient>>(context) ?? [];
+    final database = Provider.of<DatabaseService>(context);
 
     matchDB() async {
-      List<String> stat = [];
-      int i = 0;
-      imageData.ingredients.forEach((ingredient) {
-        database.forEach((db) {
-          Horspool horspool = new Horspool(ingredient, db.name);
-          if (horspool.search()) stat.add(db.status);
-          else stat.add('unknown');
-          print('foo');
-        });
-      });
+      // List<String> stat = [];
+      // int i = 0;
 
-      stat.forEach((element) {
-        print('${imageData.ingredients[i++]} $element');
-      });
+      var sim = StringMatcher(term: Term.char, algorithm: Levenshtein());
+      print(sim.partialSimilarOne('Soybean', ['Soybean', 'Soybean Oil'], (a, b) => 
+        a.ratio.compareTo(b.ratio),
+        selector: (x) => x.percent,
+      ).item1.toString());
+      
+
+      // for (var ingredient in imageData.ingredients) {
+      //   for (var db in dbList) {
+      //     if (Horspool(ingredient, db.name).search()) stat.add(db.status);
+      //     else stat.add('unknown');
+      //   }
+      // }
+
+      // for (var ingredient in imageData.ingredients) {
+      //   stat.add(await database.find(ingredient) ?? 'unknown');
+      // }
+
+      // stat.forEach((el) {
+      //   print('$i ${imageData.ingredients[i++]} $el');
+      // });
+
+      // database.ingredientCollection.snapshots().map((snapshot) {
+      //   for (var doc in snapshot.docs) {
+      //     if (Horspool('Sugar', doc.data()['name']).search()) stat.add(doc.data()['status']);
+      //     else stat.add('unknown');
+      //   }
+      // });
     }
 
-    //matchDB();
+    matchDB();
 
     return Scaffold(
       appBar: AppBar(

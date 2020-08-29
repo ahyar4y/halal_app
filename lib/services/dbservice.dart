@@ -21,6 +21,17 @@ class DatabaseService {
     }).toList();
   }
 
+  Future<String> find(String data) async {
+    QuerySnapshot qs = await ingredientCollection.where("name", isEqualTo: data).get();
+    String result;
+
+    for (var doc in qs.docs) {
+      result = doc.data()['status'];
+    }
+
+    return result;
+  }
+
   Stream<List<DBIngredient>> get ingredients {
     return ingredientCollection.snapshots().map(toDB);
   }
