@@ -14,20 +14,7 @@ class ImageData {
     'Egg Whites',
     'Artificial Flavor'
   ];
-  List<String> status = [
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-    'unknown',
-  ];
+  List<String> status = [];
 
   void setImage(String img) => _image = img;
 
