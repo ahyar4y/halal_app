@@ -23,21 +23,28 @@ class ImageData {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(File(this.image));
     final TextRecognizer ocr = FirebaseVision.instance.textRecognizer();
     final VisionText imageText = await ocr.processImage(visionImage);
-    //RegExp regex = RegExp(r".*?(\(([^)]+)\))?,");
+    RegExp regex = RegExp(r"ingredients?:?\s*([^\r\n]*)", caseSensitive: false);
     String str = '';
 
     for (TextBlock block in imageText.blocks) {
       for (TextLine line in block.lines) {
         str += line.text;
-        // for (TextElement element in line.elements) {
-          
-        // }
       }
     }
-    print(str);
     ocr.close();
 
-    // printIngredients();
+    Iterable<RegExpMatch> matches = regex.allMatches(str);
+    matches.forEach((match) { 
+      str = match.group(1);
+    });
+    
+    regex = RegExp(r"\b[^,]+?[\s\w\d]+(\([^)]+\))?", caseSensitive: false);
+    matches = regex.allMatches(str);
+    matches.forEach((match) {
+      ingredients.add(str.substring(match.start, match.end));
+    });
+
+    printIngredients();
   }
 
   void printIngredients() {
