@@ -13,19 +13,21 @@ class Detail extends StatefulWidget {
 }
 
 class _DetailState extends State<Detail> {
-  bool loading = true;
-
-  void load() {
-    setState(() => loading = !loading);
+  Future ocr;
+  @override
+  void initState() {
+    super.initState();
+    final img = Provider.of<ImageModel>(context, listen: false);
+    ocr = OCRService().readImage(img);
   }
 
   @override
   Widget build(BuildContext context) {
-    final img = Provider.of<ImageModel>(context);
+    final img = Provider.of<ImageModel>(context, listen: false);
     final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
 
     return FutureBuilder(
-      future: OCRService().readImage(img),
+      future: ocr,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(

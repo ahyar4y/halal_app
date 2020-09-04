@@ -16,11 +16,11 @@ class OCRService {
     return image;
   }
 
-  Future<List<String>> readImage(ImageModel img) async {
+  Future readImage(ImageModel img) async {
     final FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(File(img.image));
     final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
     final VisionText visionText = await textRecognizer.processImage(visionImage);
-    // TODO. CODES BELOW THIS ARE EXECUTED TWICE. IDK WHY
+
     String str = '';
 
     for (TextBlock block in visionText.blocks) {
@@ -32,17 +32,17 @@ class OCRService {
 
     RegExp regex = RegExp(r"ingredients?:?\s*([^\r\n]*)", caseSensitive: false);
     Iterable<RegExpMatch> matches = regex.allMatches(str);
+
     matches.forEach((match) { 
       str = match.group(1);
     });
 
     regex = RegExp(r"\b[^,]+?[\w\d\s]+(\([^)]+\))?", caseSensitive: false);
     matches = regex.allMatches(str);
-    if (img.ingredients.isEmpty) {
-      matches.forEach((match) {
-        img.ingredients.add(str.substring(match.start, match.end));
-      });
-    }
+
+    matches.forEach((match) {
+      img.ingredients.add(str.substring(match.start, match.end));
+    });
 
     img.printIngredients();
     return img.ingredients;
