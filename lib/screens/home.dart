@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:halal_app/models/imageData.dart';
+import 'package:halal_app/models/imageModel.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -18,7 +23,7 @@ class Home extends StatelessWidget {
       ),
       body: Column(
         children: <Widget>[
-          MainTopSection(size: size),
+          MainTopSection(size: size,),
           Expanded(
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -52,7 +57,7 @@ class MainTopSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageData = Provider.of<ImageData>(context);
+    final img = Provider.of<ImageModel>(context);
 
     return Container(
       height: size.height * 0.40,
@@ -90,8 +95,7 @@ class MainTopSection extends StatelessWidget {
                   BoxShadow(
                     offset: Offset(0, 10),
                     blurRadius: 50,
-                    color:
-                        Theme.of(context).primaryColor.withOpacity(0.25),
+                    color: Theme.of(context).primaryColor.withOpacity(0.25),
                   ),
                 ],
               ),
@@ -141,8 +145,8 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    imageData.setImage(await _getImage('camera'));
-
+                    img.setImage(await _getImage('camera'));
+                    
                     Navigator.pushNamed(context, '/detail');
                   },
                 ),
@@ -151,10 +155,10 @@ class MainTopSection extends StatelessWidget {
                   text: 'Gallery',
                   icon: Icons.add_photo_alternate,
                   iconColor: Colors.white,
-                  fillColor: Colors.pink,//Colors.red[400],
+                  fillColor: Colors.pink,
                   callback: () async {
-                    imageData.setImage(await _getImage('gallery'));
-
+                    img.setImage(await _getImage('gallery'));
+                    
                     Navigator.pushNamed(context, '/detail');
                   },
                 ),
