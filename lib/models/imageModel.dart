@@ -1,9 +1,13 @@
 class ImageModel {
   String _image;
-  List<String> ingredients = [];
-  List<String> status = [];
+  List<String> ingredients;
+  List<String> status;
 
-  void setImage(String img) => _image = img;
+  void setImage(String img) {
+    _image = img;
+    ingredients = [];
+    status = [];
+  }
 
   String get image => _image;
 

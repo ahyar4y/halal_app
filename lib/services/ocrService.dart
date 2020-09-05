@@ -36,7 +36,7 @@ class OCRService {
       str = match.group(1);
     });
 
-    regex = RegExp(r"\b\.+[\w\s]+.+", caseSensitive: false);
+    regex = RegExp(r"\.+\s*[A-Z]+.+", caseSensitive: false);
     matches = regex.allMatches(str);
     matches.forEach((match) { 
       str = str.substring(0, match.start - 1);
@@ -48,7 +48,7 @@ class OCRService {
       img.ingredients.add(str.substring(match.start, match.end));
     });
 
-    img.printIngredients();
+    // img.printIngredients();
     return img.ingredients;
   }
 }

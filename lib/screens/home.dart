@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/models/imageModel.dart';
+import 'package:halal_app/services/dbservice.dart';
+import 'package:halal_app/models/ingredientModel.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -23,7 +25,9 @@ class _HomeState extends State<Home> {
       ),
       body: Column(
         children: <Widget>[
-          MainTopSection(size: size,),
+          MainTopSection(
+            size: size,
+          ),
           Expanded(
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -49,15 +53,15 @@ class MainTopSection extends StatelessWidget {
   Future _getImage(String method) async {
     final picker = ImagePicker();
     final image = await picker.getImage(
-      source: method == 'camera' ? ImageSource.camera : ImageSource.gallery
-    );
-    
+        source: method == 'camera' ? ImageSource.camera : ImageSource.gallery);
+
     return image.path;
   }
 
   @override
   Widget build(BuildContext context) {
     final img = Provider.of<ImageModel>(context);
+    final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
 
     return Container(
       height: size.height * 0.40,
@@ -74,9 +78,48 @@ class MainTopSection extends StatelessWidget {
           ),
           Positioned(
             left: size.width * 0.27,
+            bottom: size.height * 0.30,
+            child: Text(
+              'HalCheck',
+              style: Theme.of(context).textTheme.headline3,
+            ),
+          ),
+          Positioned(
+            left: size.width * 0.28,
+            bottom: size.height * 0.3 - 115,
+            child: Row(
+              children: <Widget>[
+                CircleButton(
+                  text: 'Camera',
+                  icon: Icons.add_a_photo,
+                  iconColor: Colors.white,
+                  fillColor: Colors.pink,
+                  callback: () async {
+                    img.setImage(await _getImage('camera'));
+
+                    Navigator.pushNamed(context, '/detail');
+                  },
+                ),
+                SizedBox(width: 20),
+                CircleButton(
+                  text: 'Gallery',
+                  icon: Icons.add_photo_alternate,
+                  iconColor: Colors.white,
+                  fillColor: Colors.pink,
+                  callback: () async {
+                    img.setImage(await _getImage('gallery'));
+
+                    Navigator.pushNamed(context, '/detail');
+                  },
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            left: size.width * 0.27,
             bottom: size.height * 0.08,
             child: Text(
-              'Or search food item manually:',
+              'Or search ingredient manually:',
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
@@ -104,14 +147,13 @@ class MainTopSection extends StatelessWidget {
                   Expanded(
                     child: TextFormField(
                       onFieldSubmitted: (String value) {
-                        print('$value');
+                        print(DatabaseService().searchDB(value, dbList).comment);
                       },
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: TextStyle(
-                          color: Theme.of(context)
-                              .primaryColor
-                              .withOpacity(0.5),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.5),
                         ),
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
@@ -124,45 +166,6 @@ class MainTopSection extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            left: size.width * 0.27,
-            bottom: size.height * 0.30,
-            child: Text(
-              'HalCheck',
-              style: Theme.of(context).textTheme.headline3,
-            ),
-          ),
-          Positioned(
-            left: size.width * 0.28,
-            bottom: size.height * 0.3 - 115,
-            child: Row(
-              children: <Widget>[
-                CircleButton(
-                  text: 'Camera',
-                  icon: Icons.add_a_photo,
-                  iconColor: Colors.white,
-                  fillColor: Colors.pink,
-                  callback: () async {
-                    img.setImage(await _getImage('camera'));
-                    
-                    Navigator.pushNamed(context, '/detail');
-                  },
-                ),
-                SizedBox(width: 20),
-                CircleButton(
-                  text: 'Gallery',
-                  icon: Icons.add_photo_alternate,
-                  iconColor: Colors.white,
-                  fillColor: Colors.pink,
-                  callback: () async {
-                    img.setImage(await _getImage('gallery'));
-                    
-                    Navigator.pushNamed(context, '/detail');
-                  },
-                ),
-              ],
             ),
           ),
         ],

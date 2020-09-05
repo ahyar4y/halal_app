@@ -14,16 +14,18 @@ class Detail extends StatefulWidget {
 
 class _DetailState extends State<Detail> {
   Future ocr;
+
   @override
   void initState() {
     super.initState();
+
     final img = Provider.of<ImageModel>(context, listen: false);
     ocr = OCRService().readImage(img);
   }
 
   @override
   Widget build(BuildContext context) {
-    final img = Provider.of<ImageModel>(context, listen: false);
+    final img = Provider.of<ImageModel>(context);
     final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
 
     return FutureBuilder(
