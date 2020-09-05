@@ -32,14 +32,18 @@ class OCRService {
 
     RegExp regex = RegExp(r"ingredients?:?\s*([^\r\n]*)", caseSensitive: false);
     Iterable<RegExpMatch> matches = regex.allMatches(str);
-
     matches.forEach((match) { 
       str = match.group(1);
     });
 
-    regex = RegExp(r"\b[^,]+?[\w\d\s]+(\([^)]+\))?", caseSensitive: false);
+    regex = RegExp(r"\b\.+[\w\s]+.+", caseSensitive: false);
     matches = regex.allMatches(str);
+    matches.forEach((match) { 
+      str = str.substring(0, match.start - 1);
+    });
 
+    regex = RegExp(r"\b[\w\d\s!@#$%^&*_+\-=`~{}\[\]:;'<>\\.]+(\([^)]+\))?", caseSensitive: false);
+    matches = regex.allMatches(str);
     matches.forEach((match) {
       img.ingredients.add(str.substring(match.start, match.end));
     });
