@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/models/imageModel.dart';
-import 'package:halal_app/services/dbservice.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
 class Home extends StatefulWidget {
@@ -18,10 +17,6 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.menu),
-        ),
       ),
       body: Column(
         children: <Widget>[
@@ -68,25 +63,30 @@ class MainTopSection extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            height: size.height * 0.40 - 24,
+            height: size.height * 0.4,
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(45),
-                  bottomRight: Radius.circular(45)),
+                  bottomLeft: Radius.circular(45.0),
+                  bottomRight: Radius.circular(45.0)),
             ),
           ),
           Positioned(
-            left: size.width * 0.27,
-            bottom: size.height * 0.30,
+            left: size.width * 0.21,
+            bottom: size.height * 0.29,
             child: Text(
               'HalCheck',
-              style: Theme.of(context).textTheme.headline3,
+              style: TextStyle(
+                  fontFamily: 'Dosis',
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0,
+                  color: Colors.orange),
             ),
           ),
           Positioned(
             left: size.width * 0.28,
-            bottom: size.height * 0.3 - 115,
+            bottom: size.height * 0.1,
             child: Row(
               children: <Widget>[
                 CircleButton(
@@ -116,61 +116,103 @@ class MainTopSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: size.width * 0.27,
-            bottom: size.height * 0.08,
-            child: Text(
-              'Or search ingredient manually:',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 30),
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 50,
-                    color: Theme.of(context).primaryColor.withOpacity(0.25),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextFormField(
-                      onFieldSubmitted: (String value) {
-                        print(DatabaseService().searchDB(value, dbList).comment);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        hintStyle: TextStyle(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.5),
-                        ),
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.search,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ],
+            left: size.width * 0.19,
+            bottom: size.height * 0.01,
+            child: FlatButton(
+              onPressed: () {
+                showSearch(
+                    context: context, delegate: SearchIngredient(dbList));
+              },
+              child: Text(
+                'Or search ingredient manually',
+                style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    fontSize: 16.0,
+                    decoration: TextDecoration.underline,
+                    color: Colors.white,
+                    letterSpacing: 0.3),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class SearchIngredient extends SearchDelegate {
+  final List<IngredientModel> dbList;
+
+  SearchIngredient(this.dbList);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    try {
+      return [
+        IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          },
+        ),
+      ];
+    } catch (e) {
+      print(e);
+    }
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    try {
+      return IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          close(context, null);
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    try {
+      final results =
+          dbList.where((item) => item.name.toLowerCase().contains(query));
+      return ListView(
+        children: results
+            .map((result) => ListTile(
+                  isThreeLine: true,
+                  title: Text(result.name),
+                  subtitle: Text(result.status),
+                ))
+            .toList(),
+      );
+    } catch (e) {
+      print(e);
+    }
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    try {
+      final results =
+          dbList.where((item) => item.name.toLowerCase().contains(query));
+      return ListView(
+        children: results
+            .map((result) => ListTile(
+                  title: Text(result.name),
+                  subtitle: Text(result.status),
+                ))
+            .toList(),
+      );
+    } catch (e) {
+      print(e);
+    }
+    throw UnimplementedError();
   }
 }
 

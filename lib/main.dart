@@ -1,11 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:halal_app/models/ingredientModel.dart';
-import 'package:halal_app/services/dbService.dart';
 import 'package:provider/provider.dart';
-import 'package:halal_app/models/imageModel.dart';
 import 'package:halal_app/screens/home.dart';
 import 'package:halal_app/screens/detail.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:halal_app/models/imageModel.dart';
+import 'package:halal_app/services/dbService.dart';
+import 'package:halal_app/models/ingredientModel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
