@@ -4,12 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/models/imageModel.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -50,7 +45,10 @@ class MainTopSection extends StatelessWidget {
     final image = await picker.getImage(
         source: method == 'camera' ? ImageSource.camera : ImageSource.gallery);
 
-    return image.path;
+    if (image != null)
+      return image.path;
+    else
+      return null;
   }
 
   @override
@@ -72,51 +70,77 @@ class MainTopSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: size.width * 0.21,
-            bottom: size.height * 0.29,
-            child: Text(
-              'HalCheck',
-              style: TextStyle(
-                  fontFamily: 'Dosis',
-                  fontSize: 60.0,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.0,
-                  color: Colors.orange),
+            left: size.width * 0.2,
+            bottom: size.height * 0.3,
+            child: Stack(
+              children: <Widget>[
+                Text(
+                  'HalCheck',
+                  style: TextStyle(
+                      fontFamily: 'Dosis',
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 6
+                        ..color = Colors.white),
+                ),
+                Text(
+                  'HalCheck',
+                  style: TextStyle(
+                      fontFamily: 'Dosis',
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                      color: Colors.orange),
+                )
+              ],
             ),
           ),
           Positioned(
-            left: size.width * 0.28,
+            left: size.width * 0.26,
             bottom: size.height * 0.1,
             child: Row(
               children: <Widget>[
                 CircleButton(
                   text: 'Camera',
+                  textColor: Colors.white,
                   icon: Icons.add_a_photo,
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    img.setImage(await _getImage('camera'));
+                    final value = await _getImage('camera');
 
-                    Navigator.pushNamed(context, '/detail');
+                    if (value != null) {
+                      img.setImage(value);
+
+                      Navigator.pushNamed(context, '/detail');
+                    }
                   },
                 ),
-                SizedBox(width: 20),
+                SizedBox(width: 30),
                 CircleButton(
                   text: 'Gallery',
+                  textColor: Colors.white,
                   icon: Icons.add_photo_alternate,
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    img.setImage(await _getImage('gallery'));
+                    final value = await _getImage('gallery');
 
-                    Navigator.pushNamed(context, '/detail');
+                    if (value != null) {
+                      img.setImage(value);
+
+                      Navigator.pushNamed(context, '/detail');
+                    }
                   },
                 ),
               ],
             ),
           ),
           Positioned(
-            left: size.width * 0.19,
+            left: size.width * 0.12,
             bottom: size.height * 0.01,
             child: FlatButton(
               onPressed: () {
@@ -124,10 +148,10 @@ class MainTopSection extends StatelessWidget {
                     context: context, delegate: SearchIngredient(dbList));
               },
               child: Text(
-                'Or search ingredient manually',
+                'Tap here to search ingredient manually',
                 style: Theme.of(context).textTheme.bodyText1.copyWith(
                     fontSize: 16.0,
-                    decoration: TextDecoration.underline,
+                    //decoration: TextDecoration.underline,
                     color: Colors.white,
                     letterSpacing: 0.3),
               ),
@@ -218,6 +242,7 @@ class SearchIngredient extends SearchDelegate {
 
 class CircleButton extends StatelessWidget {
   final String text;
+  final Color textColor;
   final IconData icon;
   final Color iconColor;
   final Color fillColor;
@@ -226,6 +251,7 @@ class CircleButton extends StatelessWidget {
   const CircleButton(
       {Key key,
       @required this.text,
+      @required this.textColor,
       @required this.icon,
       @required this.iconColor,
       @required this.fillColor,
@@ -255,6 +281,7 @@ class CircleButton extends StatelessWidget {
         Text(
           this.text,
           style: TextStyle(
+            color: this.textColor,
             fontSize: 20,
           ),
         ),

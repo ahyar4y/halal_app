@@ -18,8 +18,9 @@ class HalalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<ImageModel>(create: (_) => ImageModel()),
-        StreamProvider<List<IngredientModel>>.value(value: DatabaseService().ingredients),
+        ChangeNotifierProvider<ImageModel>(create: (_) => ImageModel()),
+        StreamProvider<List<IngredientModel>>.value(
+            value: DatabaseService().ingredients),
       ],
       child: MaterialApp(
         theme: ThemeData(
@@ -29,8 +30,8 @@ class HalalApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/',
         routes: {
-          '/' : (context) => Home(),
-          '/detail' : (context) => Detail(),
+          '/': (context) => Home(),
+          '/detail': (context) => Detail(),
         },
       ),
     );
