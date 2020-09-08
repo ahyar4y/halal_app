@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/screens/loading.dart';
 import 'package:halal_app/models/imageModel.dart';
+import 'package:halal_app/shared/statusColor.dart';
 import 'package:halal_app/services/dbService.dart';
 import 'package:halal_app/services/ocrService.dart';
 import 'package:halal_app/models/ingredientModel.dart';
@@ -27,17 +28,6 @@ class _DetailState extends State<Detail> {
   Widget build(BuildContext context) {
     final img = Provider.of<ImageModel>(context);
     final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
-
-    Color statColor(String str) {
-      if (str == 'halal')
-        return Colors.green;
-      else if (str == 'haram')
-        return Colors.red;
-      else if (str == 'doubtful')
-        return Colors.yellow[700];
-      else
-        return Colors.black;
-    }
 
     return FutureBuilder(
         future: ocr,
@@ -81,70 +71,13 @@ class _DetailState extends State<Detail> {
                           if (!snapshot.hasData) return Loading();
 
                           for (var i = 0; i < img.ingredientsLength; i++) {
-                            img.setStatus(DatabaseService()
-                                .matchDB(img, img.getIngredient(i), dbList));
+                            img.setStatus(
+                                i,
+                                DatabaseService().matchDB(
+                                    img, img.getIngredient(i), dbList));
                           }
 
-                          return ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: img.ingredientsLength,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                elevation: 0.0,
-                                color: Colors.grey[200],
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 3.0),
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.edit),
-                                        iconSize: 16.0,
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              builder: (context) {
-                                                return Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 20.0,
-                                                      horizontal: 60.0),
-                                                  child: EditIngredient(
-                                                    img.getIngredient(index),
-                                                    index,
-                                                  ),
-                                                );
-                                              });
-                                        },
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          img.getIngredient(index),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontSize: 20.0,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Text(
-                                          img.getStatus(index),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color:
-                                                statColor(img.getStatus(index)),
-                                            fontSize: 20.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
+                          return StatusList(img: img);
                         }),
                   ],
                 ),
@@ -152,6 +85,122 @@ class _DetailState extends State<Detail> {
             ),
           );
         });
+  }
+}
+
+class StatusList extends StatelessWidget {
+  final ImageModel img;
+
+  const StatusList({
+    Key key,
+    @required this.img,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: img.ingredientsLength,
+      itemBuilder: (context, index) {
+        return Card(
+          elevation: 0.0,
+          color: Colors.grey[200],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 3.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  iconSize: 16.0,
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20.0, horizontal: 60.0),
+                            child: EditIngredient(
+                              img.getIngredient(index),
+                              index,
+                            ),
+                          );
+                        });
+                  },
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    img.getIngredient(index),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Text(
+                        img.getStatus(index),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: statusColor(img.getStatus(index)),
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      img.isCommentNull(index)
+                          ? Container()
+                          : IconButton(
+                              icon: Icon(Icons.info_outline),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return InfoAlert(img: img, index: index);
+                                  },
+                                );
+                              },
+                            ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class InfoAlert extends StatelessWidget {
+  final ImageModel img;
+  final int index;
+
+  const InfoAlert({
+    Key key,
+    @required this.img,
+    @required this.index,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Information'),
+      content: SingleChildScrollView(
+        child: Text(img.getComment(index)),
+      ),
+      actions: [
+        FlatButton(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
   }
 }
 

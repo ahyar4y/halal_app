@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/models/imageModel.dart';
+import 'package:halal_app/shared/circleButton.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
 class Home extends StatelessWidget {
@@ -237,55 +238,5 @@ class SearchIngredient extends SearchDelegate {
       print(e);
     }
     throw UnimplementedError();
-  }
-}
-
-class CircleButton extends StatelessWidget {
-  final String text;
-  final Color textColor;
-  final IconData icon;
-  final Color iconColor;
-  final Color fillColor;
-  final dynamic callback;
-
-  const CircleButton(
-      {Key key,
-      @required this.text,
-      @required this.textColor,
-      @required this.icon,
-      @required this.iconColor,
-      @required this.fillColor,
-      @required this.callback})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          width: 80,
-          height: 80,
-          child: RawMaterialButton(
-            onPressed: this.callback,
-            shape: CircleBorder(),
-            elevation: 0,
-            fillColor: this.fillColor,
-            child: Icon(
-              this.icon,
-              color: this.iconColor,
-              size: 50,
-            ),
-          ),
-        ),
-        SizedBox(height: 5),
-        Text(
-          this.text,
-          style: TextStyle(
-            color: this.textColor,
-            fontSize: 20,
-          ),
-        ),
-      ],
-    );
   }
 }

@@ -1,48 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:halal_app/models/ingredientModel.dart';
 
 class ImageModel extends ChangeNotifier {
   String _image;
-  List<String> _ingredients;
-  List<String> _status;
+  List<IngredientModel> _ingredients;
 
   void setImage(String img) {
     _image = img;
     _ingredients = [];
-    _status = [];
   }
 
   String get image => _image;
 
   int get ingredientsLength => _ingredients.length;
 
-  String getIngredient(int index) => _ingredients[index];
+  String getIngredient(int index) => _ingredients[index].name;
 
-  String getStatus(int index) => _status[index];
+  String getStatus(int index) => _ingredients[index].status;
 
-  void setIngredients(List<String> list) {
+  String getComment(int index) => _ingredients[index].comment;
+
+  bool isCommentNull(int index) {
+    if (_ingredients[index].comment == '')
+      return true;
+    else
+      return false;
+  }
+
+  void setIngredients(List<IngredientModel> list) {
     _ingredients = list;
   }
 
+  void setStatus(int index, IngredientModel val) {
+    _ingredients[index].status = val.status;
+    _ingredients[index].comment = val.comment;
+  }
+
   void editIngredient(int index, String ingredient) {
-    _ingredients[index] = ingredient;
+    _ingredients[index].name = ingredient;
 
-    notifyListeners();
+    // notifyListeners();
   }
 
-  void setStatus(String stat) {
-    _status.add(stat);
-  }
-
-  void editStatus(int index, String stat) {
-    _status[index] = stat;
+  void editStatus(int index, IngredientModel val) {
+    _ingredients[index].status = val.status;
+    _ingredients[index].comment = val.comment;
 
     notifyListeners();
   }
 
   void printIngredients() {
-    print(_status.length);
-    for (int i = 0; i < _status.length; i++) {
-      print(_status[i]);
+    print(ingredientsLength);
+    for (int i = 0; i < ingredientsLength; i++) {
+      print(_ingredients[i].name);
+      print(_ingredients[i].status);
+      print(_ingredients[i].comment);
     }
   }
 }

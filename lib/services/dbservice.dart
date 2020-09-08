@@ -2,7 +2,6 @@ import 'package:halal_app/models/imageModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 import 'package:string_similarity/string_similarity.dart';
-// import 'package:stringmatcher/stringmatcher.dart';
 
 class DatabaseService {
   final CollectionReference _ingredientCollection =
@@ -31,32 +30,20 @@ class DatabaseService {
       return null;
   }
 
-  String matchDB(
+  IngredientModel matchDB(
       ImageModel img, String ingredient, List<IngredientModel> dbList) {
     final _result =
         ingredient.bestMatch(dbList.map((list) => list.name).toList());
 
     if (_result.bestMatch.rating > 0.4)
-      return dbList[dbList.indexWhere(
-              (element) => element.name == _result.bestMatch.target)]
-          .status;
+      return IngredientModel(
+          status: dbList[dbList.indexWhere(
+                  (element) => element.name == _result.bestMatch.target)]
+              .status,
+          comment: dbList[dbList.indexWhere(
+                  (element) => element.name == _result.bestMatch.target)]
+              .comment);
     else
-      return 'unknown';
-
-    // var sim = StringMatcher(term: Term.char, algorithm: Levenshtein());
-    // _result = sim.partialSimilarOne(
-    //   ingredient,
-    //   dbList.map((list) => list.name).toList(),
-    //   (a, b) => a.ratio.compareTo(b.ratio),
-    //   selector: (x) => x.percent,
-    // );
-    // print(_result);
-
-    // if (_result.item2 > 30.0)
-    //   img.status.add(
-    //       dbList[dbList.indexWhere((element) => element.name == _result.item1)]
-    //           .status);
-    // else
-    //   img.status.add('unknown');
+      return IngredientModel(status: 'unknown', comment: 'data not available');
   }
 }

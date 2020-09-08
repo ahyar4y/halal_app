@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:halal_app/models/ingredientModel.dart';
 import 'package:image/image.dart';
 import 'package:halal_app/models/imageModel.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -7,9 +8,9 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 class OCRService {
   Image preProcess(String img) {
     Image _image = decodeImage(File(img).readAsBytesSync());
-    double factor = max(1, 1024.0 / _image.width);
-    int newHeight = factor.toInt() * _image.height;
-    _image = copyResize(_image, height: newHeight);
+    double _factor = max(1, 1024.0 / _image.width);
+    int _newHeight = _factor.toInt() * _image.height;
+    _image = copyResize(_image, height: _newHeight);
     _image = contrast(_image, 150);
     _image = grayscale(_image);
 
@@ -23,7 +24,7 @@ class OCRService {
         FirebaseVision.instance.textRecognizer();
     final VisionText _visionText =
         await _textRecognizer.processImage(_visionImage);
-    List<String> _list = [];
+    List<IngredientModel> _list = [];
     String _str = '';
 
     for (TextBlock block in _visionText.blocks) {
@@ -50,7 +51,10 @@ class OCRService {
         caseSensitive: false);
     _matches = _regex.allMatches(_str);
     _matches.forEach((match) {
-      _list.add(_str.substring(match.start, match.end));
+      _list.add(IngredientModel(
+          name: _str.substring(match.start, match.end),
+          status: null,
+          comment: null));
     });
 
     img.setIngredients(_list);

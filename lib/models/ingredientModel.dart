@@ -1,7 +1,7 @@
 class IngredientModel {
-  final String name;
-  final String status;
-  final String comment;
+  String name;
+  String status;
+  String comment;
 
   IngredientModel({this.name, this.status, this.comment});
 }
