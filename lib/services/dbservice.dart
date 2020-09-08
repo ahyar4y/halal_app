@@ -17,7 +17,7 @@ class DatabaseService {
           name: doc.data()['name'],
           status: doc.data()['status'],
           comment: doc.data()['comment']);
-    }).toList();
+    }).toList()..sort((a, b) => a.name.compareTo(b.name));
   }
 
   IngredientModel searchDB(String str, List<IngredientModel> dbList) {

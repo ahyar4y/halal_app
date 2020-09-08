@@ -215,7 +215,7 @@ class EditIngredient extends StatefulWidget {
 }
 
 class _EditIngredientState extends State<EditIngredient> {
-  String newIngredient;
+  String _newIngredient;
 
   @override
   Widget build(BuildContext context) {
@@ -227,13 +227,13 @@ class _EditIngredientState extends State<EditIngredient> {
         Text('Edit ingredient:'),
         TextFormField(
           initialValue: this.widget.ingredient,
-          onChanged: (value) => setState(() => newIngredient = value),
+          onChanged: (value) => setState(() => _newIngredient = value),
         ),
         FlatButton(
           color: Theme.of(context).primaryColor,
           child: Text('OK'),
           onPressed: () {
-            img.editIngredient(this.widget.index, newIngredient);
+            img.editIngredient(this.widget.index, _newIngredient ?? this.widget.ingredient);
             img.editStatus(
                 this.widget.index,
                 DatabaseService().matchDB(
