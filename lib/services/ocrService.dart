@@ -6,6 +6,10 @@ import 'package:halal_app/models/imageModel.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 class OCRService {
+  final ImageModel img;
+
+  OCRService(this.img);
+
   Image preProcess(String img) {
     Image _image = decodeImage(File(img).readAsBytesSync());
     double _factor = max(1, 1024.0 / _image.width);
@@ -17,7 +21,7 @@ class OCRService {
     return _image;
   }
 
-  Future readImage(ImageModel img) async {
+  Future readImage() async {
     final FirebaseVisionImage _visionImage =
         FirebaseVisionImage.fromFile(File(img.image));
     final TextRecognizer _textRecognizer =
@@ -34,25 +38,18 @@ class OCRService {
     }
     _textRecognizer.close();
 
-    RegExp _regex =
-        RegExp(r"ingredients?:?\s*([^\r\n]*)", caseSensitive: false);
-    Iterable<RegExpMatch> _matches = _regex.allMatches(_str);
-
+    Iterable<RegExpMatch> _matches = regexOperation(r"ingredients?:?\s*([^\r\n]*)", _str);
     // if (_matches.isEmpty) return [];
-
     _matches.forEach((match) {
       _str = match.group(1);
     });
 
-    _regex = RegExp(r"\.+\s*[A-Z]+.+", caseSensitive: false);
-    _matches = _regex.allMatches(_str);
+    _matches = regexOperation(r"\.+\s*[A-Z]+.+", _str);
     _matches.forEach((match) {
       _str = _str.substring(0, match.start - 1);
     });
 
-    _regex = RegExp(r"\b[\w\d\s!@#$%^&*_+\-=`~{}\[\]:;'<>\\.]+(\([^)]+\))?",
-        caseSensitive: false);
-    _matches = _regex.allMatches(_str);
+    _matches = regexOperation(r"\b[\w\d\s!@#$%^&*_+\-=`~{}\[\]:;'<>\\.]+(\([^)]+\))?", _str);
 
     if (_matches.isEmpty) return [];
 
@@ -66,5 +63,12 @@ class OCRService {
     img.setIngredients(_list);
 
     return _list;
+  }
+
+  Iterable<RegExpMatch> regexOperation(String regex, String str) {
+    RegExp _regex = RegExp(regex, caseSensitive: false);
+    Iterable<RegExpMatch> _matches = _regex.allMatches(str);
+
+    return _matches;
   }
 }

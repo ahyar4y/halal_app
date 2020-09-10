@@ -33,7 +33,7 @@ class DatabaseService {
   IngredientModel matchDB(
       ImageModel img, String ingredient, List<IngredientModel> dbList) {
     final _result =
-        ingredient.bestMatch(dbList.map((list) => list.name).toList());
+        ingredient.toLowerCase().bestMatch(dbList.map((list) => list.name).toList());
 
     if (_result.bestMatch.rating > 0.4)
       return IngredientModel(

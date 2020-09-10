@@ -20,7 +20,7 @@ class _DetailState extends State<Detail> {
     super.initState();
 
     final img = Provider.of<ImageModel>(context, listen: false);
-    ocr = OCRService().readImage(img);
+    ocr = OCRService(img).readImage();
   }
 
   @override
