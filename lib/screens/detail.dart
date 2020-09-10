@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/screens/loading.dart';
 import 'package:halal_app/models/imageModel.dart';
-import 'package:halal_app/shared/statusColor.dart';
 import 'package:halal_app/services/dbService.dart';
 import 'package:halal_app/services/ocrService.dart';
 import 'package:halal_app/models/ingredientModel.dart';
@@ -29,7 +28,7 @@ class _DetailState extends State<Detail> {
     final img = Provider.of<ImageModel>(context);
     final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
 
-    return FutureBuilder(
+    return FutureBuilder<dynamic>(
         future: ocr,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Loading();
@@ -68,8 +67,17 @@ class _DetailState extends State<Detail> {
                     StreamBuilder<List<IngredientModel>>(
                         stream: DatabaseService().ingredients,
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) return Loading();
-
+                          if (!snapshot.hasData)
+                            return Loading();
+                          else if (img.ingredientsLength == 0) {
+                            return Text(
+                              'No ingredients found, please try again',
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: 20.0,
+                              ),
+                            );
+                          }
                           for (var i = 0; i < img.ingredientsLength; i++) {
                             img.setStatus(
                                 i,
@@ -95,6 +103,17 @@ class StatusList extends StatelessWidget {
     Key key,
     @required this.img,
   }) : super(key: key);
+
+  Color _statusColor(String str) {
+    if (str == 'halal')
+      return Colors.green;
+    else if (str == 'haram')
+      return Colors.red;
+    else if (str == 'doubtful')
+      return Colors.yellow[700];
+    else
+      return Colors.black;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,11 +165,11 @@ class StatusList extends StatelessWidget {
                         img.getStatus(index),
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: statusColor(img.getStatus(index)),
+                          color: _statusColor(img.getStatus(index)),
                           fontSize: 20.0,
                         ),
                       ),
-                      img.isCommentNull(index)
+                      img.isCommentEmpty(index)
                           ? Container()
                           : IconButton(
                               icon: Icon(Icons.info_outline),
@@ -233,7 +252,8 @@ class _EditIngredientState extends State<EditIngredient> {
           color: Theme.of(context).primaryColor,
           child: Text('OK'),
           onPressed: () {
-            img.editIngredient(this.widget.index, _newIngredient ?? this.widget.ingredient);
+            img.editIngredient(
+                this.widget.index, _newIngredient ?? this.widget.ingredient);
             img.editStatus(
                 this.widget.index,
                 DatabaseService().matchDB(

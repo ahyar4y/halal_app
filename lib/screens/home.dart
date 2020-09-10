@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/models/imageModel.dart';
@@ -41,15 +42,17 @@ class MainTopSection extends StatelessWidget {
 
   final Size size;
 
-  Future _getImage(String method) async {
-    final picker = ImagePicker();
-    final image = await picker.getImage(
-        source: method == 'camera' ? ImageSource.camera : ImageSource.gallery);
+  Future _getImage(ImageSource source) async {
+    final _picker = ImagePicker();
+    PickedFile _image = await _picker.getImage(source: source);
 
-    if (image != null)
-      return image.path;
-    else
-      return null;
+    return (_image != null) ? await _cropImage(_image) : null;
+  }
+
+  Future _cropImage(PickedFile img) async {
+    final _croppedFile = await ImageCropper.cropImage(sourcePath: img.path);
+
+    return (_croppedFile != null) ? _croppedFile.path : img.path;
   }
 
   @override
@@ -111,7 +114,7 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    final value = await _getImage('camera');
+                    final value = await _getImage(ImageSource.camera);
 
                     if (value != null) {
                       img.setImage(value);
@@ -128,7 +131,7 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    final value = await _getImage('gallery');
+                    final value = await _getImage(ImageSource.gallery);
 
                     if (value != null) {
                       img.setImage(value);

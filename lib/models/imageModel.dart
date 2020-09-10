@@ -20,7 +20,7 @@ class ImageModel extends ChangeNotifier {
 
   String getComment(int index) => _ingredients[index].comment;
 
-  bool isCommentNull(int index) {
+  bool isCommentEmpty(int index) {
     if (_ingredients[index].comment == '')
       return true;
     else

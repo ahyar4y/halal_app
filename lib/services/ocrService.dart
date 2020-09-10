@@ -37,6 +37,9 @@ class OCRService {
     RegExp _regex =
         RegExp(r"ingredients?:?\s*([^\r\n]*)", caseSensitive: false);
     Iterable<RegExpMatch> _matches = _regex.allMatches(_str);
+
+    // if (_matches.isEmpty) return [];
+
     _matches.forEach((match) {
       _str = match.group(1);
     });
@@ -50,6 +53,9 @@ class OCRService {
     _regex = RegExp(r"\b[\w\d\s!@#$%^&*_+\-=`~{}\[\]:;'<>\\.]+(\([^)]+\))?",
         caseSensitive: false);
     _matches = _regex.allMatches(_str);
+
+    if (_matches.isEmpty) return [];
+
     _matches.forEach((match) {
       _list.add(IngredientModel(
           name: _str.substring(match.start, match.end),
