@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +36,7 @@ class Home extends StatelessWidget {
   }
 }
 
-class MainTopSection extends StatelessWidget {
+class MainTopSection extends StatefulWidget {
   const MainTopSection({
     Key key,
     @required this.size,
@@ -42,17 +44,25 @@ class MainTopSection extends StatelessWidget {
 
   final Size size;
 
-  Future _getImage(ImageSource source) async {
+  @override
+  _MainTopSectionState createState() => _MainTopSectionState();
+}
+
+class _MainTopSectionState extends State<MainTopSection> {
+  File _imgFile;
+  String _imgPath;
+
+  Future<void> _getImage(ImageSource source) async {
     final _picker = ImagePicker();
     PickedFile _image = await _picker.getImage(source: source);
 
-    return (_image != null) ? await _cropImage(_image) : null;
+    if (_image != null) setState(() => _imgFile = File(_image.path));
   }
 
-  Future _cropImage(PickedFile img) async {
+  Future<void> _cropImage(File img) async {
     final _croppedFile = await ImageCropper.cropImage(sourcePath: img.path);
 
-    return (_croppedFile != null) ? _croppedFile.path : img.path;
+    if (_croppedFile != null) setState(() => _imgPath = _croppedFile.path);
   }
 
   @override
@@ -61,11 +71,11 @@ class MainTopSection extends StatelessWidget {
     final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
 
     return Container(
-      height: size.height * 0.40,
+      height: widget.size.height * 0.40,
       child: Stack(
         children: <Widget>[
           Container(
-            height: size.height * 0.4,
+            height: widget.size.height * 0.4,
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.only(
@@ -74,8 +84,8 @@ class MainTopSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: size.width * 0.2,
-            bottom: size.height * 0.3,
+            left: widget.size.width * 0.2,
+            bottom: widget.size.height * 0.3,
             child: Stack(
               children: <Widget>[
                 Text(
@@ -103,8 +113,8 @@ class MainTopSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: size.width * 0.26,
-            bottom: size.height * 0.1,
+            left: widget.size.width * 0.26,
+            bottom: widget.size.height * 0.1,
             child: Row(
               children: <Widget>[
                 CircleButton(
@@ -114,12 +124,19 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    final value = await _getImage(ImageSource.camera);
+                    await _getImage(ImageSource.camera);
 
-                    if (value != null) {
-                      img.setImage(value);
+                    if (_imgFile != null) {
+                      await _cropImage(_imgFile);
 
-                      Navigator.pushNamed(context, '/detail');
+                      if (_imgPath != null) {
+                        img.setImage(_imgPath);
+
+                        setState(() => _imgPath = null);
+
+                        Navigator.pushNamed(context, '/detail');
+                      }
+                      setState(() => _imgFile = null);
                     }
                   },
                 ),
@@ -131,12 +148,19 @@ class MainTopSection extends StatelessWidget {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    final value = await _getImage(ImageSource.gallery);
+                    await _getImage(ImageSource.gallery);
 
-                    if (value != null) {
-                      img.setImage(value);
+                    if (_imgFile != null) {
+                      await _cropImage(_imgFile);
 
-                      Navigator.pushNamed(context, '/detail');
+                      if (_imgPath != null) {
+                        img.setImage(_imgPath);
+
+                        setState(() => _imgPath = null);
+
+                        Navigator.pushNamed(context, '/detail');
+                      }
+                      setState(() => _imgFile = null);
                     }
                   },
                 ),
@@ -144,8 +168,8 @@ class MainTopSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: size.width * 0.12,
-            bottom: size.height * 0.01,
+            left: widget.size.width * 0.12,
+            bottom: widget.size.height * 0.01,
             child: FlatButton(
               onPressed: () {
                 showSearch(
