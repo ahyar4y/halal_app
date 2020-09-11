@@ -21,6 +21,13 @@ class OCRService {
     return _image;
   }
 
+  Iterable<RegExpMatch> _regexOperation(String regex, String str) {
+    RegExp _regex = RegExp(regex, caseSensitive: false);
+    Iterable<RegExpMatch> _matches = _regex.allMatches(str);
+
+    return _matches;
+  }
+
   Future readImage() async {
     final FirebaseVisionImage _visionImage =
         FirebaseVisionImage.fromFile(File(img.image));
@@ -38,18 +45,20 @@ class OCRService {
     }
     _textRecognizer.close();
 
-    Iterable<RegExpMatch> _matches = regexOperation(r"ingredients?:?\s*([^\r\n]*)", _str);
+    Iterable<RegExpMatch> _matches =
+        _regexOperation(r"ingredients?:?\s*([^\r\n]*)", _str);
     // if (_matches.isEmpty) return [];
     _matches.forEach((match) {
       _str = match.group(1);
     });
 
-    _matches = regexOperation(r"\.+\s*[A-Z]+.+", _str);
+    _matches = _regexOperation(r"\.+\s*[A-Z]+.+", _str);
     _matches.forEach((match) {
       _str = _str.substring(0, match.start - 1);
     });
 
-    _matches = regexOperation(r"\b[\w\d\s!@#$%^&*_+\-=`~{}\[\]:;'<>\\.]+(\([^)]+\))?", _str);
+    _matches = _regexOperation(
+        r"\b[\w\d\s!@#$%^&*_+\-=`~{}\[\]:;'<>\\.]+(\([^)]+\))?", _str);
 
     if (_matches.isEmpty) return [];
 
@@ -63,12 +72,5 @@ class OCRService {
     img.setIngredients(_list);
 
     return _list;
-  }
-
-  Iterable<RegExpMatch> regexOperation(String regex, String str) {
-    RegExp _regex = RegExp(regex, caseSensitive: false);
-    Iterable<RegExpMatch> _matches = _regex.allMatches(str);
-
-    return _matches;
   }
 }

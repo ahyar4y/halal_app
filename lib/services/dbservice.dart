@@ -1,11 +1,13 @@
 import 'package:halal_app/models/imageModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:halal_app/models/ingredientModel.dart';
-import 'package:string_similarity/string_similarity.dart';
+import 'package:stringmatcher/stringmatcher.dart';
 
 class DatabaseService {
   final CollectionReference _ingredientCollection =
       FirebaseFirestore.instance.collection('ingredients');
+
+  final _lev = StringMatcher(term: Term.char, algorithm: Levenshtein());
 
   Stream<List<IngredientModel>> get ingredients {
     return _ingredientCollection.snapshots().map(_toDB);
@@ -17,31 +19,39 @@ class DatabaseService {
           name: doc.data()['name'],
           status: doc.data()['status'],
           comment: doc.data()['comment']);
-    }).toList()..sort((a, b) => a.name.compareTo(b.name));
+    }).toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
   }
 
   IngredientModel searchDB(String str, List<IngredientModel> dbList) {
-    final _result = str.bestMatch(dbList.map((list) => list.name).toList());
+    final _result = _lev.partialSimilarOne(
+        str.toLowerCase(),
+        dbList.map((list) => list.name).toList(),
+        (a, b) => a.ratio.compareTo(b.ratio),
+        selector: (x) => x.percent);
 
-    if (_result.bestMatch.rating > 0.4)
-      return dbList[dbList
-          .indexWhere((element) => element.name == _result.bestMatch.target)];
+    if (_result.item2 > 40.0)
+      return dbList[
+          dbList.indexWhere((element) => element.name == _result.item1)];
     else
       return null;
   }
 
   IngredientModel matchDB(
       ImageModel img, String ingredient, List<IngredientModel> dbList) {
-    final _result =
-        ingredient.toLowerCase().bestMatch(dbList.map((list) => list.name).toList());
+    final _result = _lev.partialSimilarOne(
+        ingredient.toLowerCase(),
+        dbList.map((list) => list.name).toList(),
+        (a, b) => a.ratio.compareTo(b.ratio),
+        selector: (x) => x.percent);
 
-    if (_result.bestMatch.rating > 0.4)
+    if (_result.item2 > 35.0)
       return IngredientModel(
-          status: dbList[dbList.indexWhere(
-                  (element) => element.name == _result.bestMatch.target)]
+          status: dbList[
+                  dbList.indexWhere((element) => element.name == _result.item1)]
               .status,
-          comment: dbList[dbList.indexWhere(
-                  (element) => element.name == _result.bestMatch.target)]
+          comment: dbList[
+                  dbList.indexWhere((element) => element.name == _result.item1)]
               .comment);
     else
       return IngredientModel(status: 'unknown', comment: 'data not available');
