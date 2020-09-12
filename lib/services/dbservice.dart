@@ -1,7 +1,7 @@
 import 'package:halal_app/models/imageModel.dart';
+import 'package:stringmatcher/stringmatcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:halal_app/models/ingredientModel.dart';
-import 'package:stringmatcher/stringmatcher.dart';
 
 class DatabaseService {
   final CollectionReference _ingredientCollection =
@@ -21,20 +21,6 @@ class DatabaseService {
           comment: doc.data()['comment']);
     }).toList()
       ..sort((a, b) => a.name.compareTo(b.name));
-  }
-
-  IngredientModel searchDB(String str, List<IngredientModel> dbList) {
-    final _result = _lev.partialSimilarOne(
-        str.toLowerCase(),
-        dbList.map((list) => list.name).toList(),
-        (a, b) => a.ratio.compareTo(b.ratio),
-        selector: (x) => x.percent);
-
-    if (_result.item2 > 35.0)
-      return dbList[
-          dbList.indexWhere((element) => element.name == _result.item1)];
-    else
-      return null;
   }
 
   List<String> matchDB(

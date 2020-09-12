@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:halal_app/shared/infoAlert.dart';
 import 'package:halal_app/models/imageModel.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:halal_app/shared/circleButton.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
@@ -173,7 +173,7 @@ class _MainTopSectionState extends State<MainTopSection> {
             child: FlatButton(
               onPressed: () {
                 showSearch(
-                    context: context, delegate: SearchIngredient(dbList));
+                    context: context, delegate: SearchIngredient(list: dbList));
               },
               child: Text(
                 'Tap here to search ingredient manually',
@@ -192,9 +192,9 @@ class _MainTopSectionState extends State<MainTopSection> {
 }
 
 class SearchIngredient extends SearchDelegate {
-  final List<IngredientModel> dbList;
+  final List<IngredientModel> list;
 
-  SearchIngredient(this.dbList);
+  SearchIngredient({@required this.list});
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -231,17 +231,47 @@ class SearchIngredient extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     try {
-      final results =
-          dbList.where((item) => item.name.toLowerCase().contains(query));
-      return ListView(
-        children: results
-            .map((result) => ListTile(
-                  isThreeLine: true,
-                  title: Text(result.name),
-                  subtitle: Text(result.status),
-                ))
-            .toList(),
-      );
+      final results = list.where(
+          (item) => item.name.toLowerCase().contains(query.toLowerCase()));
+      return results.isEmpty
+          ? Center(
+              child: Text(
+                'not found',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          : ListView(
+              children: results
+                  .map((result) => ListTile(
+                        isThreeLine: true,
+                        title: Text(result.name),
+                        subtitle: Text(result.status),
+                        trailing: result.comment == ''
+                            ? Container(
+                                width: 0.0,
+                                height: 0.0,
+                              )
+                            : IconButton(
+                                icon: Icon(
+                                  Icons.info_outline,
+                                  size: 30.0,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return InfoAlert(alert: result.comment);
+                                    },
+                                  );
+                                },
+                              ),
+                      ))
+                  .toList(),
+            );
     } catch (e) {
       print(e);
     }
@@ -251,16 +281,47 @@ class SearchIngredient extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     try {
-      final results =
-          dbList.where((item) => item.name.toLowerCase().contains(query));
-      return ListView(
-        children: results
-            .map((result) => ListTile(
-                  title: Text(result.name),
-                  subtitle: Text(result.status),
-                ))
-            .toList(),
-      );
+      final results = list.where(
+          (item) => item.name.toLowerCase().contains(query.toLowerCase()));
+      return results.isEmpty
+          ? Center(
+              child: Text(
+                'not found',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey,
+                ),
+              ),
+            )
+          : ListView(
+              children: results
+                  .map((result) => ListTile(
+                        isThreeLine: true,
+                        title: Text(result.name),
+                        subtitle: Text(result.status),
+                        trailing: result.comment == ''
+                            ? Container(
+                                width: 0.0,
+                                height: 0.0,
+                              )
+                            : IconButton(
+                                icon: Icon(
+                                  Icons.info_outline,
+                                  size: 30.0,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return InfoAlert(alert: result.comment);
+                                    },
+                                  );
+                                },
+                              ),
+                      ))
+                  .toList(),
+            );
     } catch (e) {
       print(e);
     }

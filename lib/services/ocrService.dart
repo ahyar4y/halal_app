@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:halal_app/models/ingredientModel.dart';
 import 'package:image/image.dart';
 import 'package:halal_app/models/imageModel.dart';
+import 'package:halal_app/models/ingredientModel.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 class OCRService {

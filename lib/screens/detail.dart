@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/screens/loading.dart';
+import 'package:halal_app/shared/infoAlert.dart';
 import 'package:halal_app/models/imageModel.dart';
 import 'package:halal_app/services/dbService.dart';
 import 'package:halal_app/services/ocrService.dart';
@@ -68,7 +69,7 @@ class _DetailState extends State<Detail> {
                         stream: DatabaseService().ingredients,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) return Loading();
-                          if (img.ingredients.length == 0)
+                          if (img.ingredients.isEmpty)
                             return Text(
                               'No ingredients found, please try again',
                               style: TextStyle(
@@ -84,7 +85,7 @@ class _DetailState extends State<Detail> {
                                     img, img.getIngredient(i).name, dbList));
                           }
 
-                          return StatusList(img: img);
+                          return ResultList(img: img);
                         }),
                   ],
                 ),
@@ -95,10 +96,10 @@ class _DetailState extends State<Detail> {
   }
 }
 
-class StatusList extends StatelessWidget {
+class ResultList extends StatelessWidget {
   final ImageModel img;
 
-  const StatusList({
+  const ResultList({
     Key key,
     @required this.img,
   }) : super(key: key);
@@ -139,8 +140,8 @@ class StatusList extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 vertical: 20.0, horizontal: 60.0),
                             child: EditIngredient(
-                              img.getIngredient(index).name,
-                              index,
+                              ingredient: img.getIngredient(index).name,
+                              index: index,
                             ),
                           );
                         });
@@ -176,7 +177,9 @@ class StatusList extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return InfoAlert(img: img, index: index);
+                                    return InfoAlert(
+                                        alert:
+                                            img.getIngredient(index).comment);
                                   },
                                 );
                               },
@@ -193,40 +196,11 @@ class StatusList extends StatelessWidget {
   }
 }
 
-class InfoAlert extends StatelessWidget {
-  final ImageModel img;
-  final int index;
-
-  const InfoAlert({
-    Key key,
-    @required this.img,
-    @required this.index,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Information'),
-      content: SingleChildScrollView(
-        child: Text(img.getIngredient(index).comment),
-      ),
-      actions: [
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-}
-
 class EditIngredient extends StatefulWidget {
   final String ingredient;
   final int index;
 
-  EditIngredient(this.ingredient, this.index);
+  EditIngredient({@required this.ingredient, @required this.index});
 
   @override
   _EditIngredientState createState() => _EditIngredientState();
