@@ -26,15 +26,8 @@ class ImageModel extends ChangeNotifier {
     _ingredients[index].comment = val[1];
   }
 
-  void editIngredient(int index, String ingredient) {
+  void updateIngredient(int index, String ingredient) {
     _ingredients[index].name = ingredient;
-
-    // notifyListeners();
-  }
-
-  void editStatus(int index, List<String> val) {
-    _ingredients[index].status = val[0];
-    _ingredients[index].comment = val[1];
 
     notifyListeners();
   }

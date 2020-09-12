@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/shared/infoAlert.dart';
 import 'package:halal_app/models/imageModel.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:halal_app/shared/statusColor.dart';
 import 'package:halal_app/shared/circleButton.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
@@ -244,34 +245,7 @@ class SearchIngredient extends SearchDelegate {
                 ),
               ),
             )
-          : ListView(
-              children: results
-                  .map((result) => ListTile(
-                        isThreeLine: true,
-                        title: Text(result.name),
-                        subtitle: Text(result.status),
-                        trailing: result.comment == ''
-                            ? Container(
-                                width: 0.0,
-                                height: 0.0,
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.info_outline,
-                                  size: 30.0,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return InfoAlert(alert: result.comment);
-                                    },
-                                  );
-                                },
-                              ),
-                      ))
-                  .toList(),
-            );
+          : SearchList(results: results);
     } catch (e) {
       print(e);
     }
@@ -294,37 +268,56 @@ class SearchIngredient extends SearchDelegate {
                 ),
               ),
             )
-          : ListView(
-              children: results
-                  .map((result) => ListTile(
-                        isThreeLine: true,
-                        title: Text(result.name),
-                        subtitle: Text(result.status),
-                        trailing: result.comment == ''
-                            ? Container(
-                                width: 0.0,
-                                height: 0.0,
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.info_outline,
-                                  size: 30.0,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return InfoAlert(alert: result.comment);
-                                    },
-                                  );
-                                },
-                              ),
-                      ))
-                  .toList(),
-            );
+          : SearchList(results: results);
     } catch (e) {
       print(e);
     }
     throw UnimplementedError();
+  }
+}
+
+class SearchList extends StatelessWidget {
+  const SearchList({
+    Key key,
+    @required this.results,
+  }) : super(key: key);
+
+  final Iterable<IngredientModel> results;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: results
+          .map((result) => ListTile(
+                isThreeLine: true,
+                title: Text(result.name),
+                subtitle: Text(
+                  result.status,
+                  style: TextStyle(
+                    color: statusColor(result.status),
+                  ),
+                ),
+                trailing: result.comment == ''
+                    ? Container(
+                        width: 0.0,
+                        height: 0.0,
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.info_outline,
+                          size: 30.0,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return InfoAlert(alert: result.comment);
+                            },
+                          );
+                        },
+                      ),
+              ))
+          .toList(),
+    );
   }
 }

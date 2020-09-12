@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:halal_app/screens/loading.dart';
 import 'package:halal_app/shared/infoAlert.dart';
 import 'package:halal_app/models/imageModel.dart';
+import 'package:halal_app/shared/statusColor.dart';
 import 'package:halal_app/services/dbService.dart';
 import 'package:halal_app/services/ocrService.dart';
 import 'package:halal_app/models/ingredientModel.dart';
@@ -33,7 +34,6 @@ class _DetailState extends State<Detail> {
         future: ocr,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Loading();
-
           return Scaffold(
             appBar: AppBar(
               title: Text('Detail'),
@@ -85,7 +85,7 @@ class _DetailState extends State<Detail> {
                                     img, img.getIngredient(i).name, dbList));
                           }
 
-                          return ResultList(img: img);
+                          return ResultList(img: img, list: dbList);
                         }),
                   ],
                 ),
@@ -98,22 +98,13 @@ class _DetailState extends State<Detail> {
 
 class ResultList extends StatelessWidget {
   final ImageModel img;
+  final List<IngredientModel> list;
 
   const ResultList({
     Key key,
     @required this.img,
+    @required this.list,
   }) : super(key: key);
-
-  Color _statusColor(String str) {
-    if (str == 'halal')
-      return Colors.green;
-    else if (str == 'haram')
-      return Colors.red;
-    else if (str == 'doubtful')
-      return Colors.yellow[700];
-    else
-      return Colors.black;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +113,10 @@ class ResultList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: img.ingredients.length,
       itemBuilder: (context, index) {
+        img.setStatus(
+            index,
+            DatabaseService()
+                .matchDB(img, img.getIngredient(index).name, list));
         return Card(
           elevation: 0.0,
           color: Colors.grey[200],
@@ -165,7 +160,7 @@ class ResultList extends StatelessWidget {
                         img.getIngredient(index).status,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: _statusColor(img.getIngredient(index).status),
+                          color: statusColor(img.getIngredient(index).status),
                           fontSize: 20.0,
                         ),
                       ),
@@ -212,7 +207,6 @@ class _EditIngredientState extends State<EditIngredient> {
   @override
   Widget build(BuildContext context) {
     final img = Provider.of<ImageModel>(context);
-    final dbList = Provider.of<List<IngredientModel>>(context);
 
     return Column(
       children: [
@@ -225,12 +219,8 @@ class _EditIngredientState extends State<EditIngredient> {
           color: Theme.of(context).primaryColor,
           child: Text('OK'),
           onPressed: () {
-            img.editIngredient(
+            img.updateIngredient(
                 this.widget.index, _newIngredient ?? this.widget.ingredient);
-            img.editStatus(
-                this.widget.index,
-                DatabaseService().matchDB(
-                    img, img.getIngredient(this.widget.index).name, dbList));
             Navigator.pop(context);
           },
         ),
