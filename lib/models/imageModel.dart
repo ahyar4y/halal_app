@@ -12,21 +12,18 @@ class ImageModel extends ChangeNotifier {
 
   String get image => _image;
 
-  int get ingredientsLength => _ingredients.length;
+  List<IngredientModel> get ingredients => _ingredients;
 
-  String getIngredient(int index) => _ingredients[index].name;
+  IngredientModel getIngredient(int index) => _ingredients[index];
 
-  String getStatus(int index) => _ingredients[index].status;
-
-  String getComment(int index) => _ingredients[index].comment;
-
-  bool isCommentEmpty(int index) => (_ingredients[index].comment == '') ? true : false;
+  bool isCommentEmpty(int index) =>
+      (_ingredients[index].comment == '') ? true : false;
 
   void setIngredients(List<IngredientModel> list) => _ingredients = list;
 
-  void setStatus(int index, IngredientModel val) {
-    _ingredients[index].status = val.status;
-    _ingredients[index].comment = val.comment;
+  void setStatus(int index, List<String> val) {
+    _ingredients[index].status = val[0];
+    _ingredients[index].comment = val[1];
   }
 
   void editIngredient(int index, String ingredient) {
@@ -35,16 +32,16 @@ class ImageModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  void editStatus(int index, IngredientModel val) {
-    _ingredients[index].status = val.status;
-    _ingredients[index].comment = val.comment;
+  void editStatus(int index, List<String> val) {
+    _ingredients[index].status = val[0];
+    _ingredients[index].comment = val[1];
 
     notifyListeners();
   }
 
   void printIngredients() {
-    print(ingredientsLength);
-    for (int i = 0; i < ingredientsLength; i++) {
+    print(ingredients.length);
+    for (int i = 0; i < ingredients.length; i++) {
       print(_ingredients[i].name);
       print(_ingredients[i].status);
       print(_ingredients[i].comment);

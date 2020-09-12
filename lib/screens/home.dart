@@ -168,7 +168,7 @@ class _MainTopSectionState extends State<MainTopSection> {
             ),
           ),
           Positioned(
-            left: widget.size.width * 0.12,
+            left: widget.size.width * 0.08,
             bottom: widget.size.height * 0.01,
             child: FlatButton(
               onPressed: () {
@@ -181,7 +181,7 @@ class _MainTopSectionState extends State<MainTopSection> {
                     fontSize: 16.0,
                     //decoration: TextDecoration.underline,
                     color: Colors.white,
-                    letterSpacing: 0.3),
+                    letterSpacing: 0.5),
               ),
             ),
           ),

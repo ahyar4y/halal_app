@@ -23,8 +23,8 @@ class CircleButton extends StatelessWidget {
     return Column(
       children: <Widget>[
         Container(
-          width: 80,
-          height: 80,
+          width: 80.0,
+          height: 80.0,
           child: RawMaterialButton(
             onPressed: this.callback,
             shape: CircleBorder(),
@@ -33,16 +33,17 @@ class CircleButton extends StatelessWidget {
             child: Icon(
               this.icon,
               color: this.iconColor,
-              size: 50,
+              size: 50.0,
             ),
           ),
         ),
-        SizedBox(height: 5),
+        SizedBox(height: 5.0),
         Text(
           this.text,
           style: TextStyle(
             color: this.textColor,
-            fontSize: 20,
+            fontSize: 20.0,
+            letterSpacing: 0.3,
           ),
         ),
       ],

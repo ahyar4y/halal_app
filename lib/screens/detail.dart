@@ -67,9 +67,8 @@ class _DetailState extends State<Detail> {
                     StreamBuilder<List<IngredientModel>>(
                         stream: DatabaseService().ingredients,
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData)
-                            return Loading();
-                          else if (img.ingredientsLength == 0) {
+                          if (!snapshot.hasData) return Loading();
+                          if (img.ingredients.length == 0)
                             return Text(
                               'No ingredients found, please try again',
                               style: TextStyle(
@@ -77,12 +76,19 @@ class _DetailState extends State<Detail> {
                                 fontSize: 20.0,
                               ),
                             );
-                          }
-                          for (var i = 0; i < img.ingredientsLength; i++) {
+
+                          // img.setIngredients(img.ingredients.map((ingredient) {
+                          //   return img.setStatus2(
+                          //       ingredient,
+                          //       DatabaseService()
+                          //           .matchDB(img, ingredient.name, dbList));
+                          // }).toList());
+
+                          for (var i = 0; i < img.ingredients.length; i++) {
                             img.setStatus(
                                 i,
                                 DatabaseService().matchDB(
-                                    img, img.getIngredient(i), dbList));
+                                    img, img.getIngredient(i).name, dbList));
                           }
 
                           return StatusList(img: img);
@@ -120,7 +126,7 @@ class StatusList extends StatelessWidget {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: img.ingredientsLength,
+      itemCount: img.ingredients.length,
       itemBuilder: (context, index) {
         return Card(
           elevation: 0.0,
@@ -140,7 +146,7 @@ class StatusList extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 vertical: 20.0, horizontal: 60.0),
                             child: EditIngredient(
-                              img.getIngredient(index),
+                              img.getIngredient(index).name,
                               index,
                             ),
                           );
@@ -150,7 +156,7 @@ class StatusList extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    img.getIngredient(index),
+                    img.getIngredient(index).name,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 20.0,
@@ -162,10 +168,10 @@ class StatusList extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        img.getStatus(index),
+                        img.getIngredient(index).status,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: _statusColor(img.getStatus(index)),
+                          color: _statusColor(img.getIngredient(index).status),
                           fontSize: 20.0,
                         ),
                       ),
@@ -209,7 +215,7 @@ class InfoAlert extends StatelessWidget {
     return AlertDialog(
       title: Text('Information'),
       content: SingleChildScrollView(
-        child: Text(img.getComment(index)),
+        child: Text(img.getIngredient(index).comment),
       ),
       actions: [
         FlatButton(
@@ -257,7 +263,7 @@ class _EditIngredientState extends State<EditIngredient> {
             img.editStatus(
                 this.widget.index,
                 DatabaseService().matchDB(
-                    img, img.getIngredient(this.widget.index), dbList));
+                    img, img.getIngredient(this.widget.index).name, dbList));
             Navigator.pop(context);
           },
         ),

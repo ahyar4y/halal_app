@@ -30,14 +30,14 @@ class DatabaseService {
         (a, b) => a.ratio.compareTo(b.ratio),
         selector: (x) => x.percent);
 
-    if (_result.item2 > 40.0)
+    if (_result.item2 > 35.0)
       return dbList[
           dbList.indexWhere((element) => element.name == _result.item1)];
     else
       return null;
   }
 
-  IngredientModel matchDB(
+  List<String> matchDB(
       ImageModel img, String ingredient, List<IngredientModel> dbList) {
     final _result = _lev.partialSimilarOne(
         ingredient.toLowerCase(),
@@ -46,14 +46,12 @@ class DatabaseService {
         selector: (x) => x.percent);
 
     if (_result.item2 > 35.0)
-      return IngredientModel(
-          status: dbList[
+      return [dbList[
                   dbList.indexWhere((element) => element.name == _result.item1)]
-              .status,
-          comment: dbList[
+              .status, dbList[
                   dbList.indexWhere((element) => element.name == _result.item1)]
-              .comment);
+              .comment];
     else
-      return IngredientModel(status: 'unknown', comment: 'data not available');
+      return ['unknown', 'data not available'];
   }
 }
