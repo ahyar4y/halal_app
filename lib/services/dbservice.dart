@@ -46,11 +46,12 @@ class DatabaseService {
         selector: (x) => x.percent);
 
     if (_result.item2 > 35.0)
-      return [dbList[
-                  dbList.indexWhere((element) => element.name == _result.item1)]
-              .status, dbList[
-                  dbList.indexWhere((element) => element.name == _result.item1)]
-              .comment];
+      return [
+        dbList[dbList.indexWhere((element) => element.name == _result.item1)]
+            .status,
+        dbList[dbList.indexWhere((element) => element.name == _result.item1)]
+            .comment
+      ];
     else
       return ['unknown', 'data not available'];
   }

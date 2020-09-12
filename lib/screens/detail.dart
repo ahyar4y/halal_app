@@ -77,13 +77,6 @@ class _DetailState extends State<Detail> {
                               ),
                             );
 
-                          // img.setIngredients(img.ingredients.map((ingredient) {
-                          //   return img.setStatus2(
-                          //       ingredient,
-                          //       DatabaseService()
-                          //           .matchDB(img, ingredient.name, dbList));
-                          // }).toList());
-
                           for (var i = 0; i < img.ingredients.length; i++) {
                             img.setStatus(
                                 i,
