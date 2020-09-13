@@ -78,13 +78,6 @@ class _DetailState extends State<Detail> {
                               ),
                             );
 
-                          for (var i = 0; i < img.ingredients.length; i++) {
-                            img.setStatus(
-                                i,
-                                DatabaseService().matchDB(
-                                    img, img.getIngredient(i).name, dbList));
-                          }
-
                           return ResultList(img: img, list: dbList);
                         }),
                   ],
@@ -117,6 +110,7 @@ class ResultList extends StatelessWidget {
             index,
             DatabaseService()
                 .matchDB(img, img.getIngredient(index).name, list));
+
         return Card(
           elevation: 0.0,
           color: Colors.grey[200],
