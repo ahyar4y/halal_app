@@ -28,14 +28,14 @@ class OCRService {
     return _matches;
   }
 
-  Future readImage() async {
+  Future<List<IngredientModel>> readImage() async {
     final FirebaseVisionImage _visionImage =
         FirebaseVisionImage.fromFile(File(img.image));
     final TextRecognizer _textRecognizer =
         FirebaseVision.instance.textRecognizer();
     final VisionText _visionText =
         await _textRecognizer.processImage(_visionImage);
-    List<IngredientModel> _list = [];
+    List<IngredientModel> _list = <IngredientModel>[];
     String _str = '';
 
     for (TextBlock block in _visionText.blocks) {

@@ -21,14 +21,14 @@ class _DetailState extends State<Detail> {
   void initState() {
     super.initState();
 
-    final img = Provider.of<ImageModel>(context, listen: false);
+    final ImageModel img = Provider.of<ImageModel>(context, listen: false);
     ocr = OCRService(img).readImage();
   }
 
   @override
   Widget build(BuildContext context) {
-    final img = Provider.of<ImageModel>(context);
-    final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
+    final ImageModel img = Provider.of<ImageModel>(context);
+    final List<IngredientModel> dbList = Provider.of<List<IngredientModel>>(context) ?? <IngredientModel>[];
 
     return FutureBuilder<dynamic>(
         future: ocr,

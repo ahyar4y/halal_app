@@ -7,7 +7,7 @@ class ImageModel extends ChangeNotifier {
 
   void setImage(String img) {
     _image = img;
-    _ingredients = [];
+    _ingredients = <IngredientModel>[];
   }
 
   String get image => _image;

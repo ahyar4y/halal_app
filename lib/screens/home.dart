@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/shared/infoAlert.dart';
@@ -53,6 +54,16 @@ class _MainTopSectionState extends State<MainTopSection> {
   File _imgFile;
   String _imgPath;
 
+  Future<bool> _checkPermission(Permission permission) async {
+    print(await permission.status);
+    if (await permission.isPermanentlyDenied)
+      await openAppSettings();
+    else if (!await permission.isGranted) {
+      if (await permission.request().isGranted) return true;
+    } else if (await permission.isGranted) return true;
+    return false;
+  }
+
   Future<void> _getImage(ImageSource source) async {
     final _picker = ImagePicker();
     PickedFile _image = await _picker.getImage(source: source);
@@ -68,8 +79,9 @@ class _MainTopSectionState extends State<MainTopSection> {
 
   @override
   Widget build(BuildContext context) {
-    final img = Provider.of<ImageModel>(context);
-    final dbList = Provider.of<List<IngredientModel>>(context) ?? [];
+    final ImageModel img = Provider.of<ImageModel>(context);
+    final List<IngredientModel> dbList =
+        Provider.of<List<IngredientModel>>(context) ?? [];
 
     return Container(
       height: widget.size.height * 0.40,
@@ -125,19 +137,21 @@ class _MainTopSectionState extends State<MainTopSection> {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    await _getImage(ImageSource.camera);
+                    if (await _checkPermission(Permission.camera)) {
+                      await _getImage(ImageSource.camera);
 
-                    if (_imgFile != null) {
-                      await _cropImage(_imgFile);
+                      if (_imgFile != null) {
+                        await _cropImage(_imgFile);
 
-                      if (_imgPath != null) {
-                        img.setImage(_imgPath);
+                        if (_imgPath != null) {
+                          img.setImage(_imgPath);
 
-                        setState(() => _imgPath = null);
+                          setState(() => _imgPath = null);
 
-                        Navigator.pushNamed(context, '/detail');
+                          Navigator.pushNamed(context, '/detail');
+                        }
+                        setState(() => _imgFile = null);
                       }
-                      setState(() => _imgFile = null);
                     }
                   },
                 ),
@@ -149,19 +163,21 @@ class _MainTopSectionState extends State<MainTopSection> {
                   iconColor: Colors.white,
                   fillColor: Colors.pink,
                   callback: () async {
-                    await _getImage(ImageSource.gallery);
+                    if (await _checkPermission(Permission.storage)) {
+                      await _getImage(ImageSource.gallery);
 
-                    if (_imgFile != null) {
-                      await _cropImage(_imgFile);
+                      if (_imgFile != null) {
+                        await _cropImage(_imgFile);
 
-                      if (_imgPath != null) {
-                        img.setImage(_imgPath);
+                        if (_imgPath != null) {
+                          img.setImage(_imgPath);
 
-                        setState(() => _imgPath = null);
+                          setState(() => _imgPath = null);
 
-                        Navigator.pushNamed(context, '/detail');
+                          Navigator.pushNamed(context, '/detail');
+                        }
+                        setState(() => _imgFile = null);
                       }
-                      setState(() => _imgFile = null);
                     }
                   },
                 ),
@@ -232,7 +248,7 @@ class SearchIngredient extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     try {
-      final results = list.where(
+      final Iterable<IngredientModel> results = list.where(
           (item) => item.name.toLowerCase().contains(query.toLowerCase()));
       return results.isEmpty
           ? Center(
@@ -255,7 +271,7 @@ class SearchIngredient extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     try {
-      final results = list.where(
+      final Iterable<IngredientModel> results = list.where(
           (item) => item.name.toLowerCase().contains(query.toLowerCase()));
       return results.isEmpty
           ? Center(
