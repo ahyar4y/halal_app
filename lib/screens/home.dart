@@ -55,7 +55,7 @@ class _MainTopSectionState extends State<MainTopSection> {
   String _imgPath;
 
   Future<bool> _checkPermission(Permission permission) async {
-    print(await permission.status);
+    //print(await permission.status);
     if (await permission.isPermanentlyDenied)
       await openAppSettings();
     else if (!await permission.isGranted) {
