@@ -1,3 +1,3 @@
 # Mobile Halal Identification Application
 
-![alt text](preview/main_menu.png =144x)
+<img src="preview/main_menu.png" widt="144" height="256"/>
