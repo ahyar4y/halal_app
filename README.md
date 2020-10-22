@@ -1,3 +1,3 @@
 # Mobile Halal Identification Application
 
-An ongoing thesis project.
+![alt text](preview/main_menu.png)
