@@ -19,21 +19,17 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
       ),
-      body: Column(
-        children: <Widget>[
-          MainTopSection(
+      body: MainTopSection(
             size: size,
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-            ),
-          ),
-        ],
-      ),
+          )
+          //Expanded(
+          //  child: Container(
+           //   margin: EdgeInsets.all(10.0),
+            //  decoration: BoxDecoration(
+             //   color: Colors.blue,
+              //),
+            //),
+          //),
     );
   }
 }
@@ -84,21 +80,21 @@ class _MainTopSectionState extends State<MainTopSection> {
         Provider.of<List<IngredientModel>>(context) ?? [];
 
     return Container(
-      height: widget.size.height * 0.40,
+      color: Theme.of(context).primaryColor,
       child: Stack(
         children: <Widget>[
           Container(
-            height: widget.size.height * 0.4,
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(45.0),
-                  bottomRight: Radius.circular(45.0)),
-            ),
+            //color: Theme.of(context).primaryColor,
+            //decoration: BoxDecoration(
+            // color: Theme.of(context).primaryColor,
+            //  borderRadius: BorderRadius.only(
+            //      bottomLeft: Radius.circular(45.0),
+            //      bottomRight: Radius.circular(45.0)),
+            //),
           ),
           Positioned(
             left: widget.size.width * 0.2,
-            bottom: widget.size.height * 0.3,
+            bottom: widget.size.height * 0.7,
             child: Stack(
               children: <Widget>[
                 Text(
@@ -127,7 +123,7 @@ class _MainTopSectionState extends State<MainTopSection> {
           ),
           Positioned(
             left: widget.size.width * 0.26,
-            bottom: widget.size.height * 0.1,
+            bottom: widget.size.height * 0.5,
             child: Row(
               children: <Widget>[
                 CircleButton(
@@ -186,7 +182,7 @@ class _MainTopSectionState extends State<MainTopSection> {
           ),
           Positioned(
             left: widget.size.width * 0.08,
-            bottom: widget.size.height * 0.01,
+            bottom: widget.size.height * 0.4,
             child: FlatButton(
               onPressed: () {
                 showSearch(
