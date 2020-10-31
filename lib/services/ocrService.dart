@@ -44,6 +44,8 @@ class OCRService {
       }
     }
     _textRecognizer.close();
+    
+    print(_str);
 
     Iterable<RegExpMatch> _matches =
         _regexOperation(r"ingredients?:?\s*([^\r\n]*)", _str);
