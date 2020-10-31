@@ -16,21 +16,22 @@ class Home extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-      ),
-      body: MainTopSection(
-            size: size,
-          )
-          //Expanded(
-          //  child: Container(
-           //   margin: EdgeInsets.all(10.0),
-            //  decoration: BoxDecoration(
-             //   color: Colors.blue,
-              //),
-            //),
-          //),
-    );
+        appBar: AppBar(
+          elevation: 0,
+        ),
+        resizeToAvoidBottomInset: false,
+        body: MainTopSection(
+          size: size,
+        )
+        //Expanded(
+        //  child: Container(
+        //   margin: EdgeInsets.all(10.0),
+        //  decoration: BoxDecoration(
+        //   color: Colors.blue,
+        //),
+        //),
+        //),
+        );
   }
 }
 
@@ -84,14 +85,14 @@ class _MainTopSectionState extends State<MainTopSection> {
       child: Stack(
         children: <Widget>[
           Container(
-            //color: Theme.of(context).primaryColor,
-            //decoration: BoxDecoration(
-            // color: Theme.of(context).primaryColor,
-            //  borderRadius: BorderRadius.only(
-            //      bottomLeft: Radius.circular(45.0),
-            //      bottomRight: Radius.circular(45.0)),
-            //),
-          ),
+              //color: Theme.of(context).primaryColor,
+              //decoration: BoxDecoration(
+              // color: Theme.of(context).primaryColor,
+              //  borderRadius: BorderRadius.only(
+              //      bottomLeft: Radius.circular(45.0),
+              //      bottomRight: Radius.circular(45.0)),
+              //),
+              ),
           Positioned(
             left: widget.size.width * 0.2,
             bottom: widget.size.height * 0.7,
@@ -195,6 +196,41 @@ class _MainTopSectionState extends State<MainTopSection> {
                     //decoration: TextDecoration.underline,
                     color: Colors.white,
                     letterSpacing: 0.5),
+              ),
+            ),
+          ),
+          Positioned(
+            left: widget.size.width * 0.47,
+            bottom: widget.size.height * 0.03,
+            child: GestureDetector(
+              onLongPress: () {
+                showModalBottomSheet<void>(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AnimatedPadding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        duration: const Duration(milliseconds: 100),
+                        child: Container(
+                          height: 70,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 50.0),
+                            child: TextFormField(
+                              autofocus: true,
+                              onFieldSubmitted: (val) {
+                                print(val);
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              },
+              child: Icon(
+                Icons.vpn_key,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),
