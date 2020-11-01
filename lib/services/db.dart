@@ -16,6 +16,10 @@ class DatabaseService {
     return _ingredientCollection.snapshots().map(_toDB);
   }
 
+  Stream<IngredientModel> get ingredient {
+    return _ingredientCollection.doc(ingredientId).snapshots().map(_toModel);
+  }
+
   List<IngredientModel> _toDB(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return IngredientModel(
@@ -25,6 +29,15 @@ class DatabaseService {
           comment: doc.data()['comment']);
     }).toList()
       ..sort((a, b) => a.name.compareTo(b.name));
+  }
+
+  IngredientModel _toModel(DocumentSnapshot snapshot) {
+    return IngredientModel(
+      id: ingredientId,
+      name: snapshot.data()['name'],
+      status: snapshot.data()['status'],
+      comment: snapshot.data()['comment']
+    );
   }
 
   List<String> matchDB(
@@ -47,7 +60,7 @@ class DatabaseService {
   }
 
   Future<void> addDB(String name, String status, String comment) async {
-    return await _ingredientCollection.doc().set({
+    return await _ingredientCollection.add({
       'name': name,
       'status': status,
       'comment': comment,

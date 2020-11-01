@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:halal_app/screens/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/services/db.dart';
 import 'package:halal_app/services/auth.dart';
@@ -170,34 +171,45 @@ class _MainSectionState extends State<MainSection> {
             ),
           ),
           Positioned(
-            left: widget.size.width * 0.08,
+            left: admin == null
+                ? widget.size.width * 0.08
+                : widget.size.width * 0.26,
             bottom: widget.size.height * 0.4,
             child: FlatButton(
-              onPressed: () {
-                showSearch(
-                    context: context, delegate: SearchIngredient(list: dbList));
-              },
-              child: Text(
-                'Tap here to search ingredient manually',
-                style: Theme.of(context).textTheme.bodyText1.copyWith(
-                    fontSize: 16.0,
-                    //decoration: TextDecoration.underline,
-                    color: Colors.white,
-                    letterSpacing: 0.5),
-              ),
-            ),
+                onPressed: () {
+                  showSearch(
+                      context: context,
+                      delegate: SearchIngredient(list: dbList));
+                },
+                child: admin == null
+                    ? Text(
+                        'Tap here to search ingredient manually',
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontSize: 16.0,
+                            //decoration: TextDecoration.underline,
+                            color: Colors.white,
+                            letterSpacing: 0.5),
+                      )
+                    : Text(
+                        'ACCESS DATABASE',
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontSize: 16.0,
+                            //decoration: TextDecoration.underline,
+                            color: Colors.white,
+                            letterSpacing: 0.5),
+                      )),
           ),
           Positioned(
             left: widget.size.width * 0.47,
             bottom: widget.size.height * 0.03,
             child: GestureDetector(
               onLongPress: () {
-                showModalBottomSheet<void>(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SecretForm();
-                    });
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CustomDialog(title: 'Sshhh!', child: SecretForm());
+                  },
+                );
               },
               child: Icon(
                 Icons.vpn_key,
@@ -208,228 +220,23 @@ class _MainSectionState extends State<MainSection> {
           admin == null
               ? Container()
               : Positioned(
-                  left: widget.size.width * 0.36,
-                  bottom: widget.size.height * 0.1,
-                  child: Column(
-                    children: [
-                      FlatButton(
-                        onPressed: () {
-                          showModalBottomSheet<void>(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AddDBForm();
-                            },
-                          );
-                        },
-                        color: Colors.white,
-                        child: Text(
-                          'Add DB',
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                              letterSpacing: 0.5),
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () {},
-                        color: Colors.white,
-                        child: Text(
-                          'Edit DB',
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                              letterSpacing: 0.5),
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () {},
-                        color: Colors.white,
-                        child: Text(
-                          'Delete DB',
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                              letterSpacing: 0.5),
-                        ),
-                      ),
-                      FlatButton(
-                        onPressed: () async {
-                          _auth.signOut();
-                        },
-                        color: Colors.white,
-                        child: Text(
-                          'Sign out',
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                              letterSpacing: 0.5),
-                        ),
-                      ),
-                    ],
+                  left: widget.size.width * 0.38,
+                  bottom: widget.size.height * 0.05,
+                  child: FlatButton(
+                    onPressed: () async {
+                      _auth.signOut();
+                    },
+                    color: Colors.white,
+                    child: Text(
+                      'Sign out',
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                          fontSize: 16.0,
+                          color: Theme.of(context).primaryColor,
+                          letterSpacing: 0.5),
+                    ),
                   ),
                 ),
         ],
-      ),
-    );
-  }
-}
-
-class AddDBForm extends StatefulWidget {
-  const AddDBForm({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  _AddDBFormState createState() => _AddDBFormState();
-}
-
-class _AddDBFormState extends State<AddDBForm> {
-  final DatabaseService _dbService = DatabaseService();
-  final _formKey = GlobalKey<FormState>();
-  TextEditingController _controller1 = TextEditingController();
-  TextEditingController _controller2 = TextEditingController();
-  TextEditingController _controller3 = TextEditingController();
-
-  String name = '';
-  String status = '';
-  String comment = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedPadding(
-      padding: MediaQuery.of(context).viewInsets,
-      duration: const Duration(microseconds: 100),
-      child: Container(
-        height: 280.0,
-        padding: EdgeInsets.symmetric(horizontal: 70.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: _controller1,
-                validator: (val) => val.isEmpty ? '' : null,
-                onChanged: (val) => setState(() => name = val),
-                decoration: InputDecoration(
-                  hintText: 'Name',
-                ),
-              ),
-              TextFormField(
-                controller: _controller2,
-                validator: (val) {
-                  switch (val.toLowerCase()) {
-                    case 'halal':
-                    case 'haram':
-                    case 'doubtful':
-                      return null;
-                      break;
-                    default:
-                      return '';
-                      break;
-                  }
-                },
-                onChanged: (val) => setState(() => status = val),
-                decoration: InputDecoration(
-                  hintText: 'Status',
-                ),
-              ),
-              TextFormField(
-                controller: _controller3,
-                validator: (val) => null,
-                onChanged: (val) => setState(() => comment = val),
-                decoration: InputDecoration(
-                  hintText: 'Comment',
-                ),
-              ),
-              SizedBox(height: 30.0),
-              FlatButton(
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    await _dbService.addDB(name, status, comment);
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return InfoAlert(alert: 'Success');
-                      },
-                    );
-                    setState(() {
-                      _controller1.clear();
-                      _controller2.clear();
-                      if (_controller3 != null) _controller3.clear();
-                    });
-                  }
-                },
-                color: Theme.of(context).primaryColor,
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SecretForm extends StatefulWidget {
-  const SecretForm({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  _SecretFormState createState() => _SecretFormState();
-}
-
-class _SecretFormState extends State<SecretForm> {
-  final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
-
-  String pass = '';
-  String error = '';
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedPadding(
-      padding: MediaQuery.of(context).viewInsets,
-      duration: const Duration(milliseconds: 100),
-      child: Container(
-        height: 150.0,
-        padding: EdgeInsets.symmetric(horizontal: 70.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                autofocus: true,
-                obscureText: true,
-                validator: (val) => val.isEmpty ? '' : null,
-                onChanged: (val) => setState(() => pass = val),
-              ),
-              SizedBox(height: 10.0),
-              FlatButton(
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    dynamic result = await _auth.adminLogin(pass);
-                    if (result == null)
-                      setState(() => error = 'ERROR');
-                    else {
-                      //print(result);
-                      Navigator.pop(context);
-                    }
-                  }
-                },
-                color: Theme.of(context).primaryColor,
-                child: Text('OK'),
-              ),
-              Text(
-                error,
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -442,6 +249,8 @@ class SearchIngredient extends SearchDelegate {
 
   @override
   List<Widget> buildActions(BuildContext context) {
+    final admin = Provider.of<User>(context);
+
     try {
       return [
         IconButton(
@@ -450,6 +259,19 @@ class SearchIngredient extends SearchDelegate {
             query = '';
           },
         ),
+        admin == null
+            ? Container()
+            : IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CustomDialog(title: 'Add DB', child: AddDBForm());
+                    },
+                  );
+                },
+              ),
       ];
     } catch (e) {
       print(e);
@@ -498,22 +320,32 @@ class SearchIngredient extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     try {
-      final Iterable<IngredientModel> results = list.where(
-          (item) => item.name.toLowerCase().contains(query.toLowerCase()));
-      return results.isEmpty
-          ? Center(
-              child: Text(
-                'not found',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.grey,
-                ),
-              ),
-            )
-          : SearchList(results: results);
+      return StreamBuilder(
+        stream: DatabaseService().ingredients,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData)
+            return Loading();
+          else {
+            List<IngredientModel> list = snapshot.data;
+            Iterable<IngredientModel> results = list.where((item) =>
+                item.name.toLowerCase().contains(query.toLowerCase()));
+            return results.isEmpty
+                ? Center(
+                    child: Text(
+                      'not found',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  )
+                : SearchList(results: results);
+          }
+        },
+      );
     } catch (e) {
-      print(e);
+      print(e.toString());
     }
     throw UnimplementedError();
   }
@@ -529,50 +361,334 @@ class SearchList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final admin = Provider.of<User>(context);
+    return ListView.builder(
+      itemCount: results.length,
+      itemBuilder: (context, index) {
+        return Dismissible(
+          key: Key(results.elementAt(index).id),
+          background: Container(
+            color: Theme.of(context).primaryColor,
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            alignment: AlignmentDirectional.centerStart,
+            child: Icon(Icons.edit, color: Colors.white),
+          ),
+          secondaryBackground: Container(
+            color: Colors.red,
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            alignment: AlignmentDirectional.centerEnd,
+            child: Icon(Icons.delete, color: Colors.white),
+          ),
+          onDismissed: (direction) {},
+          confirmDismiss: (direction) async {
+            String action;
+            if (direction == DismissDirection.startToEnd)
+              action = 'update';
+            else
+              action = 'delete';
 
-    return ListView(
-      children: results
-          .map((result) => ListTile(
-                onTap: admin == null
-                    ? null
-                    : () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Container();
-                          },
-                        );
-                      },
-                isThreeLine: true,
-                title: Text(result.name),
-                subtitle: Text(
-                  result.status,
-                  style: TextStyle(
-                    color: statusColor(result.status),
-                  ),
-                ),
-                trailing: result.comment == ''
-                    ? Container(
-                        width: 0.0,
-                        height: 0.0,
-                      )
-                    : IconButton(
-                        icon: Icon(
-                          Icons.info_outline,
-                          size: 30.0,
-                        ),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return InfoAlert(alert: result.comment);
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return action == 'update'
+                    ? CustomDialog(
+                        title: 'Update DB',
+                        child: UpdateDBForm(id: results.elementAt(index).id))
+                    : AlertDialog(
+                        title: Text('Confirmation'),
+                        content:
+                            Text('Are you sure you want to $action this item?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('Yes'),
+                            onPressed: () {
+                              DatabaseService(
+                                      ingredientId: results.elementAt(index).id)
+                                  .deleteDB();
+
+                              Navigator.pop(context);
                             },
-                          );
+                          ),
+                          TextButton(
+                            child: Text('Cancel'),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      );
+              },
+            );
+          },
+          child: ListTile(
+            title: Text(results.elementAt(index).name),
+            subtitle: Text(
+              results.elementAt(index).status,
+              style: TextStyle(
+                color: statusColor(results.elementAt(index).status),
+              ),
+            ),
+            trailing: results.elementAt(index).comment == ''
+                ? Container(
+                    width: 0.0,
+                    height: 0.0,
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.info_outline,
+                      size: 30.0,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return InfoAlert(
+                              alert: results.elementAt(index).comment);
                         },
-                      ),
-              ))
-          .toList(),
+                      );
+                    },
+                  ),
+          ),
+        );
+      },
     );
+  }
+}
+
+class CustomDialog extends StatefulWidget {
+  final String title;
+  final Widget child;
+  const CustomDialog({Key key, @required this.title, @required this.child})
+      : super(key: key);
+
+  @override
+  _CustomDialogState createState() => _CustomDialogState();
+}
+
+class _CustomDialogState extends State<CustomDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.title),
+      content: Builder(builder: (context) {
+        return Container(
+          height: 300.0,
+          child: widget.child,
+        );
+      }),
+    );
+  }
+}
+
+class SecretForm extends StatefulWidget {
+  const SecretForm({Key key}) : super(key: key);
+
+  @override
+  _SecretFormState createState() => _SecretFormState();
+}
+
+class _SecretFormState extends State<SecretForm> {
+  final _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
+
+  String _pass = '';
+  String _error = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            autofocus: true,
+            obscureText: true,
+            validator: (val) => val.isEmpty ? '' : null,
+            onChanged: (val) => setState(() => _pass = val),
+          ),
+          SizedBox(height: 10.0),
+          FlatButton(
+            onPressed: () async {
+              if (_formKey.currentState.validate()) {
+                dynamic result = await _auth.adminLogin(_pass);
+                if (result == null)
+                  setState(() => _error = 'ERROR');
+                else {
+                  //print(result);
+                  Navigator.pop(context);
+                }
+              }
+            },
+            color: Theme.of(context).primaryColor,
+            child: Text('OK'),
+          ),
+          Text(
+            _error,
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AddDBForm extends StatefulWidget {
+  const AddDBForm({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _AddDBFormState createState() => _AddDBFormState();
+}
+
+class _AddDBFormState extends State<AddDBForm> {
+  final _dbService = DatabaseService();
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _controller1 = TextEditingController();
+  TextEditingController _controller2 = TextEditingController();
+  TextEditingController _controller3 = TextEditingController();
+
+  String _name = '';
+  String _status = '';
+  String _comment = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            controller: _controller1,
+            validator: (val) => val.isEmpty ? '' : null,
+            onChanged: (val) => setState(() => _name = val),
+            decoration: InputDecoration(
+              hintText: 'Name',
+            ),
+          ),
+          TextFormField(
+            controller: _controller2,
+            validator: (val) {
+              switch (val.toLowerCase()) {
+                case 'halal':
+                case 'haram':
+                case 'doubtful':
+                  return null;
+                  break;
+                default:
+                  return '';
+                  break;
+              }
+            },
+            onChanged: (val) => setState(() => _status = val),
+            decoration: InputDecoration(
+              hintText: 'Status',
+            ),
+          ),
+          TextFormField(
+            controller: _controller3,
+            validator: (val) => null,
+            onChanged: (val) => setState(() => _comment = val),
+            decoration: InputDecoration(
+              hintText: 'Comment',
+            ),
+          ),
+          SizedBox(height: 30.0),
+          FlatButton(
+            onPressed: () async {
+              if (_formKey.currentState.validate()) {
+                await _dbService
+                    .addDB(_name, _status, _comment)
+                    .catchError((onError) => print(onError));
+
+                setState(() {
+                  _controller1.clear();
+                  _controller2.clear();
+                  if (_controller3 != null) _controller3.clear();
+                });
+              }
+            },
+            color: Theme.of(context).primaryColor,
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class UpdateDBForm extends StatefulWidget {
+  final String id;
+  const UpdateDBForm({Key key, @required this.id}) : super(key: key);
+
+  @override
+  _UpdateDBFormState createState() => _UpdateDBFormState();
+}
+
+class _UpdateDBFormState extends State<UpdateDBForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  String _name;
+  String _status;
+  String _comment;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Object>(
+        stream: DatabaseService(ingredientId: widget.id).ingredient,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            IngredientModel ingredient = snapshot.data;
+            return Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    initialValue: ingredient.name ?? _name,
+                    validator: (val) => val.isEmpty ? '' : null,
+                    onChanged: (val) => setState(() => _name = val),
+                  ),
+                  TextFormField(
+                    initialValue: ingredient.status ?? _status,
+                    validator: (val) {
+                      switch (val.toLowerCase()) {
+                        case 'halal':
+                        case 'haram':
+                        case 'doubtful':
+                          return null;
+                          break;
+                        default:
+                          return '';
+                          break;
+                      }
+                    },
+                    onChanged: (val) => setState(() => _status = val),
+                  ),
+                  TextFormField(
+                    initialValue: ingredient.comment ?? _comment,
+                    validator: (val) => null,
+                    onChanged: (val) => setState(() => _comment = val),
+                  ),
+                  SizedBox(height: 30.0),
+                  FlatButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        await DatabaseService(ingredientId: ingredient.id)
+                            .updateDB(
+                                _name ?? ingredient.name,
+                                _status ?? ingredient.status,
+                                _comment ?? ingredient.comment)
+                            .catchError((onError) => print(onError));
+                        //Navigator.pop(context);
+                      }
+                    },
+                    color: Theme.of(context).primaryColor,
+                    child: Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          } else
+            return Loading();
+        });
   }
 }
