@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:halal_app/services/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:halal_app/services/db.dart';
 import 'package:halal_app/screens/home.dart';
 import 'package:halal_app/screens/detail.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:halal_app/models/imageModel.dart';
-import 'package:halal_app/services/dbService.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
 void main() async {
@@ -21,6 +23,9 @@ class HalalApp extends StatelessWidget {
         ChangeNotifierProvider<ImageModel>(create: (_) => ImageModel()),
         StreamProvider<List<IngredientModel>>.value(
             value: DatabaseService().ingredients),
+        StreamProvider<User>.value(
+          value: AuthService().user,
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(

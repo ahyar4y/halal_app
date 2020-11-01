@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:halal_app/services/db.dart';
+import 'package:halal_app/services/ocr.dart';
 import 'package:halal_app/screens/loading.dart';
 import 'package:halal_app/shared/infoAlert.dart';
 import 'package:halal_app/models/imageModel.dart';
 import 'package:halal_app/shared/statusColor.dart';
-import 'package:halal_app/services/dbService.dart';
-import 'package:halal_app/services/ocrService.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
 class Detail extends StatefulWidget {

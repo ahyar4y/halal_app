@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:halal_app/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/shared/infoAlert.dart';
@@ -9,6 +9,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:halal_app/shared/statusColor.dart';
 import 'package:halal_app/shared/circleButton.dart';
 import 'package:halal_app/models/ingredientModel.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -20,23 +21,14 @@ class Home extends StatelessWidget {
           elevation: 0,
         ),
         resizeToAvoidBottomInset: false,
-        body: MainTopSection(
+        body: MainSection(
           size: size,
-        )
-        //Expanded(
-        //  child: Container(
-        //   margin: EdgeInsets.all(10.0),
-        //  decoration: BoxDecoration(
-        //   color: Colors.blue,
-        //),
-        //),
-        //),
-        );
+        ));
   }
 }
 
-class MainTopSection extends StatefulWidget {
-  const MainTopSection({
+class MainSection extends StatefulWidget {
+  const MainSection({
     Key key,
     @required this.size,
   }) : super(key: key);
@@ -44,10 +36,10 @@ class MainTopSection extends StatefulWidget {
   final Size size;
 
   @override
-  _MainTopSectionState createState() => _MainTopSectionState();
+  _MainSectionState createState() => _MainSectionState();
 }
 
-class _MainTopSectionState extends State<MainTopSection> {
+class _MainSectionState extends State<MainSection> {
   File _imgFile;
   String _imgPath;
 
@@ -84,15 +76,6 @@ class _MainTopSectionState extends State<MainTopSection> {
       color: Theme.of(context).primaryColor,
       child: Stack(
         children: <Widget>[
-          Container(
-              //color: Theme.of(context).primaryColor,
-              //decoration: BoxDecoration(
-              // color: Theme.of(context).primaryColor,
-              //  borderRadius: BorderRadius.only(
-              //      bottomLeft: Radius.circular(45.0),
-              //      bottomRight: Radius.circular(45.0)),
-              //),
-              ),
           Positioned(
             left: widget.size.width * 0.2,
             bottom: widget.size.height * 0.7,
@@ -208,24 +191,7 @@ class _MainTopSectionState extends State<MainTopSection> {
                     isScrollControlled: true,
                     context: context,
                     builder: (BuildContext context) {
-                      return AnimatedPadding(
-                        padding: MediaQuery.of(context).viewInsets,
-                        duration: const Duration(milliseconds: 100),
-                        child: Container(
-                          height: 70,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 50.0),
-                            child: TextFormField(
-                              autofocus: true,
-                              onFieldSubmitted: (val) {
-                                print(val);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ),
-                        ),
-                      );
+                      return SecretForm();
                     });
               },
               child: Icon(
@@ -235,6 +201,69 @@ class _MainTopSectionState extends State<MainTopSection> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SecretForm extends StatefulWidget {
+  const SecretForm({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  _SecretFormState createState() => _SecretFormState();
+}
+
+class _SecretFormState extends State<SecretForm> {
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  String pass = '';
+  String error = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPadding(
+      padding: MediaQuery.of(context).viewInsets,
+      duration: const Duration(milliseconds: 100),
+      child: Container(
+        height: 150,
+        padding: EdgeInsets.symmetric(horizontal: 70.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                autofocus: true,
+                obscureText: true,
+                validator: (val) => val.isEmpty ? '???' : null,
+                onChanged: (val) => setState(() => pass = val),
+              ),
+              SizedBox(height: 10.0),
+              FlatButton(
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    dynamic result = await _auth.adminLogin(pass);
+                    if (result == null) setState(() => error = 'ERROR');
+                    else {
+                      print(result);
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                color: Theme.of(context).primaryColor,
+                child: Text('OK'),
+              ),
+              Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
