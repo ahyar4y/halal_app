@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
 class DatabaseService {
+  final String ingredientId;
+  DatabaseService({this.ingredientId});
+
   final CollectionReference _ingredientCollection =
       FirebaseFirestore.instance.collection('ingredients');
 
@@ -16,6 +19,7 @@ class DatabaseService {
   List<IngredientModel> _toDB(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return IngredientModel(
+          id: doc.id,
           name: doc.data()['name'],
           status: doc.data()['status'],
           comment: doc.data()['comment']);
@@ -40,5 +44,25 @@ class DatabaseService {
       ];
     else
       return ['unknown', 'data not available'];
+  }
+
+  Future<void> addDB(String name, String status, String comment) async {
+    return await _ingredientCollection.doc().set({
+      'name': name,
+      'status': status,
+      'comment': comment,
+    });
+  }
+
+  Future<void> updateDB(String name, String status, String comment) async {
+    return await _ingredientCollection.doc(ingredientId).set({
+      'name': name,
+      'status': status,
+      'comment': comment,
+    });
+  }
+
+  Future<void> deleteDB() async {
+    return await _ingredientCollection.doc(ingredientId).delete();
   }
 }

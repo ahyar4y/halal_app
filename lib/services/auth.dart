@@ -7,13 +7,22 @@ class AuthService {
     return _auth.authStateChanges();
   }
 
-  Future adminLogin(String pass) async {
+  Future<dynamic> adminLogin(String pass) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: 'admin@halalapp.com', password: pass);
       User user = result.user;
-      return user.uid;
+      return user;
     } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<dynamic> signOut() async {
+    try {
+      return await _auth.signOut();
+    } catch(e) {
       print(e.toString());
       return null;
     }
