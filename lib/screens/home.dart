@@ -352,102 +352,136 @@ class SearchIngredient extends SearchDelegate {
 }
 
 class SearchList extends StatelessWidget {
+  final Iterable<IngredientModel> results;
+  
   const SearchList({
     Key key,
     @required this.results,
   }) : super(key: key);
 
-  final Iterable<IngredientModel> results;
-
   @override
   Widget build(BuildContext context) {
+    final admin = Provider.of<User>(context);
+    
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
-        return Dismissible(
-          key: Key(results.elementAt(index).id),
-          background: Container(
-            color: Theme.of(context).primaryColor,
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            alignment: AlignmentDirectional.centerStart,
-            child: Icon(Icons.edit, color: Colors.white),
-          ),
-          secondaryBackground: Container(
-            color: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            alignment: AlignmentDirectional.centerEnd,
-            child: Icon(Icons.delete, color: Colors.white),
-          ),
-          onDismissed: (direction) {},
-          confirmDismiss: (direction) async {
-            String action;
-            if (direction == DismissDirection.startToEnd)
-              action = 'update';
-            else
-              action = 'delete';
+        return admin == null ? ItemTile(results: results, index: index) : DismissibleItem(results: results, index: index);
+      },
+    );
+  }
+}
 
-            return await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return action == 'update'
-                    ? CustomDialog(
-                        title: 'Update DB',
-                        child: UpdateDBForm(id: results.elementAt(index).id))
-                    : AlertDialog(
-                        title: Text('Confirmation'),
-                        content:
-                            Text('Are you sure you want to $action this item?'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('Yes'),
-                            onPressed: () {
-                              DatabaseService(
-                                      ingredientId: results.elementAt(index).id)
-                                  .deleteDB();
+class DismissibleItem extends StatelessWidget {
+  const DismissibleItem({
+    Key key,
+    @required this.results,
+    @required this.index,
+  }) : super(key: key);
 
-                              Navigator.pop(context);
-                            },
-                          ),
-                          TextButton(
-                            child: Text('Cancel'),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ],
-                      );
-              },
-            );
-          },
-          child: ListTile(
-            title: Text(results.elementAt(index).name),
-            subtitle: Text(
-              results.elementAt(index).status,
-              style: TextStyle(
-                color: statusColor(results.elementAt(index).status),
-              ),
-            ),
-            trailing: results.elementAt(index).comment == ''
-                ? Container(
-                    width: 0.0,
-                    height: 0.0,
-                  )
-                : IconButton(
-                    icon: Icon(
-                      Icons.info_outline,
-                      size: 30.0,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return InfoAlert(
-                              alert: results.elementAt(index).comment);
+  final Iterable<IngredientModel> results;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      key: Key(results.elementAt(index).id),
+      background: Container(
+        color: Theme.of(context).primaryColor,
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        alignment: AlignmentDirectional.centerStart,
+        child: Icon(Icons.edit, color: Colors.white),
+      ),
+      secondaryBackground: Container(
+        color: Colors.red,
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        alignment: AlignmentDirectional.centerEnd,
+        child: Icon(Icons.delete, color: Colors.white),
+      ),
+      onDismissed: (direction) {},
+      confirmDismiss: (direction) async {
+        String action;
+        if (direction == DismissDirection.startToEnd)
+          action = 'update';
+        else
+          action = 'delete';
+
+        return await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return action == 'update'
+                ? CustomDialog(
+                    title: 'Update DB',
+                    child: UpdateDBForm(id: results.elementAt(index).id))
+                : AlertDialog(
+                    title: Text('Confirmation'),
+                    content:
+                        Text('Are you sure you want to $action this item?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Yes'),
+                        onPressed: () {
+                          DatabaseService(
+                                  ingredientId: results.elementAt(index).id)
+                              .deleteDB();
+
+                          Navigator.pop(context);
                         },
-                      );
-                    },
-                  ),
-          ),
+                      ),
+                      TextButton(
+                        child: Text('Cancel'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  );
+          },
         );
       },
+      child: ItemTile(results: results, index: index),
+    );
+  }
+}
+
+class ItemTile extends StatelessWidget {
+  const ItemTile({
+    Key key,
+    @required this.results,
+    @required this.index,
+  }) : super(key: key);
+
+  final Iterable<IngredientModel> results;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(results.elementAt(index).name),
+      subtitle: Text(
+        results.elementAt(index).status,
+        style: TextStyle(
+          color: statusColor(results.elementAt(index).status),
+        ),
+      ),
+      trailing: results.elementAt(index).comment == ''
+          ? Container(
+              width: 0.0,
+              height: 0.0,
+            )
+          : IconButton(
+              icon: Icon(
+                Icons.info_outline,
+                size: 30.0,
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return InfoAlert(
+                        alert: results.elementAt(index).comment);
+                  },
+                );
+              },
+            ),
     );
   }
 }
