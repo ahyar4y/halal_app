@@ -2,10 +2,10 @@
 
 <table>
     <tr>
-        <td><img src="preview/main_menu.png" width="144" height="256"/></td>
-        <td><img src="preview/search.png" width="144" height="256"/></td>
-        <td><img src="preview/detail0.png" width="144" height="256"/></td>
+        <td><img src="preview/main_menu_user.png" width="144" height="256"/></td>
+        <td><img src="preview/search_user.png" width="144" height="256"/></td>
         <td><img src="preview/detail1.png" width="144" height="256"/></td>
+        <td><img src="preview/detail2.png" width="144" height="256"/></td>
     </tr>
     <tr>
         <td>Main Menu</td>
