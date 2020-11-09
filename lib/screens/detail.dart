@@ -7,6 +7,7 @@ import 'package:halal_app/screens/loading.dart';
 import 'package:halal_app/shared/infoAlert.dart';
 import 'package:halal_app/models/imageModel.dart';
 import 'package:halal_app/shared/statusColor.dart';
+import 'package:halal_app/shared/customDialog.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 
 class Detail extends StatefulWidget {
@@ -28,7 +29,8 @@ class _DetailState extends State<Detail> {
   @override
   Widget build(BuildContext context) {
     final ImageModel img = Provider.of<ImageModel>(context);
-    final List<IngredientModel> dbList = Provider.of<List<IngredientModel>>(context) ?? <IngredientModel>[];
+    final List<IngredientModel> dbList =
+        Provider.of<List<IngredientModel>>(context) ?? <IngredientModel>[];
 
     return FutureBuilder<dynamic>(
         future: ocr,
@@ -122,16 +124,14 @@ class ResultList extends StatelessWidget {
                   icon: Icon(Icons.edit),
                   iconSize: 16.0,
                   onPressed: () {
-                    showModalBottomSheet(
+                    showDialog(
                         context: context,
-                        builder: (context) {
-                          return Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 20.0, horizontal: 60.0),
+                        builder: (BuildContext context) {
+                          return CustomDialog(
+                            title: 'Edit Ingredient',
                             child: EditIngredient(
-                              ingredient: img.getIngredient(index).name,
-                              index: index,
-                            ),
+                                ingredient: img.getIngredient(index).name,
+                                index: index),
                           );
                         });
                   },
@@ -197,28 +197,36 @@ class EditIngredient extends StatefulWidget {
 
 class _EditIngredientState extends State<EditIngredient> {
   String _newIngredient;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final img = Provider.of<ImageModel>(context);
 
-    return Column(
-      children: [
-        Text('Edit ingredient:'),
-        TextFormField(
-          initialValue: this.widget.ingredient,
-          onChanged: (value) => setState(() => _newIngredient = value),
-        ),
-        FlatButton(
-          color: Theme.of(context).primaryColor,
-          child: Text('OK'),
-          onPressed: () {
-            img.updateIngredient(
-                this.widget.index, _newIngredient ?? this.widget.ingredient);
-            Navigator.pop(context);
-          },
-        ),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            initialValue: this.widget.ingredient,
+            autofocus: true,
+            validator: (val) => val.isEmpty ? '' : null,
+            onChanged: (value) => setState(() => _newIngredient = value),
+          ),
+          SizedBox(height: 30.0),
+          FlatButton(
+            color: Theme.of(context).primaryColor,
+            child: Text('OK'),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                img.updateIngredient(this.widget.index,
+                    _newIngredient ?? this.widget.ingredient);
+                Navigator.pop(context);
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }
