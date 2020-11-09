@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:halal_app/screens/loading.dart';
 import 'package:provider/provider.dart';
 import 'package:halal_app/services/db.dart';
 import 'package:halal_app/services/auth.dart';
+import 'package:halal_app/screens/loading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:halal_app/shared/infoAlert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +11,7 @@ import 'package:halal_app/models/imageModel.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:halal_app/shared/statusColor.dart';
 import 'package:halal_app/shared/circleButton.dart';
+import 'package:halal_app/shared/customDialog.dart';
 import 'package:halal_app/models/ingredientModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -191,7 +192,7 @@ class _MainSectionState extends State<MainSection> {
                             letterSpacing: 0.5),
                       )
                     : Text(
-                        'ACCESS DATABASE',
+                        'MANAGE DATABASE',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(
                             fontSize: 16.0,
                             //decoration: TextDecoration.underline,
@@ -353,7 +354,7 @@ class SearchIngredient extends SearchDelegate {
 
 class SearchList extends StatelessWidget {
   final Iterable<IngredientModel> results;
-  
+
   const SearchList({
     Key key,
     @required this.results,
@@ -362,11 +363,13 @@ class SearchList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final admin = Provider.of<User>(context);
-    
+
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
-        return admin == null ? ItemTile(results: results, index: index) : DismissibleItem(results: results, index: index);
+        return admin == null
+            ? ItemTile(results: results, index: index)
+            : DismissibleItem(results: results, index: index);
       },
     );
   }
@@ -476,37 +479,11 @@ class ItemTile extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return InfoAlert(
-                        alert: results.elementAt(index).comment);
+                    return InfoAlert(alert: results.elementAt(index).comment);
                   },
                 );
               },
             ),
-    );
-  }
-}
-
-class CustomDialog extends StatefulWidget {
-  final String title;
-  final Widget child;
-  const CustomDialog({Key key, @required this.title, @required this.child})
-      : super(key: key);
-
-  @override
-  _CustomDialogState createState() => _CustomDialogState();
-}
-
-class _CustomDialogState extends State<CustomDialog> {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.title),
-      content: Builder(builder: (context) {
-        return Container(
-          height: 300.0,
-          child: widget.child,
-        );
-      }),
     );
   }
 }
