@@ -712,7 +712,7 @@ class _UpdateDBFormState extends State<UpdateDBForm> {
                                 _status ?? ingredient.status,
                                 _comment ?? ingredient.comment)
                             .catchError((onError) => print(onError));
-                        //Navigator.pop(context);
+                        Navigator.pop(context);
                       }
                     },
                     color: Theme.of(context).primaryColor,
